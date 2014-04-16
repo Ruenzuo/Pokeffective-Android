@@ -1,0 +1,10 @@
+package com.ruenzuo.pokeffective.models;
+
+/**
+ * Created by ruenzuo on 16/04/14.
+ */
+
+public enum PokedexType {
+    NONE, NATIONAL, KANTO, JHOTO, HOENN, ORIGINAL_SINNOH, EXTENDED_SINNOH, UPDATED_JHOTO, ORIGINAL_UNOVA,
+    EXTENDED_UNOVA, CONQUEST_GALLERY, KALOS_CENTRAL, KALOS_COASTAL, KALOS_MOUNTAIN
+}
