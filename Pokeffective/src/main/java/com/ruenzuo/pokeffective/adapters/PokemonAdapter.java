@@ -144,7 +144,7 @@ public class PokemonAdapter extends ArrayAdapter<Pokemon> implements Filterable 
                 results.values = filtered;
                 return results;
             }
-            
+
         };
         return filter;
     }
