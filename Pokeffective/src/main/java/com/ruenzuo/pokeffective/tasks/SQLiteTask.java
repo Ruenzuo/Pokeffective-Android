@@ -23,7 +23,7 @@ public class SQLiteTask extends GroundyTask {
         } catch (SQLException e) {
             return failed();
         }
-        ArrayList<Pokemon> pokemons = sqliteHelper.getPokemons(PokedexType.NATIONAL, PokemonType.NONE, 1);
+        ArrayList<Pokemon> pokemons = sqliteHelper.getPokemons(PokedexType.NATIONAL, PokemonType.NONE);
         return succeeded().add("Pokemons", pokemons);
     }
 
