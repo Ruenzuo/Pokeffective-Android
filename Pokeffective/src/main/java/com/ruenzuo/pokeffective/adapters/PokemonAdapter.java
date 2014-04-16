@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,15 +19,29 @@ import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.models.Pokemon;
 import com.ruenzuo.pokeffective.utils.ColorUtils;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * Created by ruenzuo on 16/04/14.
  */
-public class PokemonAdapter extends ArrayAdapter<Pokemon> {
+public class PokemonAdapter extends ArrayAdapter<Pokemon> implements Filterable {
 
     private int resourceId;
+    private ArrayList<Pokemon> itemsCopy;
+    private boolean searching;
 
-    public PokemonAdapter(Context context, int resource) {
-        super(context, resource);
+    public boolean isSearching() {
+        return searching;
+    }
+
+    public void setSearching(boolean searching) {
+        this.searching = searching;
+    }
+
+    public PokemonAdapter(Context context, int resource, ArrayList<Pokemon> items) {
+        super(context, resource, items);
+        itemsCopy = (ArrayList<Pokemon>) items.clone();
         resourceId = resource;
     }
 
@@ -83,6 +99,54 @@ public class PokemonAdapter extends ArrayAdapter<Pokemon> {
             convertView.setBackground(states);
         }
         return convertView;
+    }
+
+    public void addAllCopying(Collection<? extends Pokemon> collection) {
+        super.addAll(collection);
+        ArrayList<Pokemon> casted = (ArrayList<Pokemon>) collection;
+        itemsCopy = (ArrayList<Pokemon>) casted.clone();
+    }
+
+    public void restoreCopy() {
+        clear();
+        addAll(itemsCopy);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public Filter getFilter() {
+
+        Filter filter = new Filter() {
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                if (isSearching()) {
+                    ArrayList<Pokemon> filtered = (ArrayList<Pokemon>) results.values;
+                    PokemonAdapter.this.clear();
+                    PokemonAdapter.this.addAll(filtered);
+                    notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                ArrayList<Pokemon> filtered = new ArrayList<Pokemon>();
+                constraint = constraint.toString().toLowerCase();
+                if (!constraint.toString().isEmpty()) {
+                    for (int i = 0; i < itemsCopy.size(); i++) {
+                        Pokemon pokemon = PokemonAdapter.this.itemsCopy.get(i);
+                        if (pokemon.getName().toLowerCase().contains(constraint.toString()))  {
+                            filtered.add(pokemon);
+                        }
+                    }
+                }
+                results.values = filtered;
+                return results;
+            }
+            
+        };
+        return filter;
     }
 
 }

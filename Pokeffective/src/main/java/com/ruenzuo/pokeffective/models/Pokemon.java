@@ -3,7 +3,7 @@ package com.ruenzuo.pokeffective.models;
 /**
  * Created by ruenzuo on 16/04/14.
  */
-public class Pokemon {
+public class Pokemon implements Cloneable {
 
     private int identifier;
     private String name;
@@ -57,6 +57,15 @@ public class Pokemon {
 
     public void setSecondType(PokemonType secondType) {
         this.secondType = secondType;
+    }
+
+    public Pokemon clone() {
+        try {
+            return (Pokemon) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
     }
 
     public static class PokemonBuilder {
