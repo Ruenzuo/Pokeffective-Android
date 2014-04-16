@@ -4,5 +4,6 @@
     <string name="app_name">PokéApp</string>
     <string name="action_search">Search</string>
     <string name="action_filter">Filter</string>
+    <string name="pokemon_query_hint">Search for a pókemon</string>
 
 </resources>
