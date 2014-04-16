@@ -1,8 +1,7 @@
 package com.ruenzuo.pokeffective.activities;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
@@ -50,6 +49,10 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
         int id = item.getItemId();
         if (id == R.id.action_search) {
             return true;
+        }
+        else if (id == R.id.action_filter) {
+            Intent intent = new Intent(getApplicationContext(), FilterOptionMenuActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

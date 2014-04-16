@@ -35,11 +35,9 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
             listener = (OnPokemonSelectedListener)activity;
         } else {
             throw new ClassCastException(activity.toString()
-                    + " must implement PokemonListFragment.OnPokemonSelectedListener");
+                    + " must implement OnPokemonSelectedListener");
         }
     }
-
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
