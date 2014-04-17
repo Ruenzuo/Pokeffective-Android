@@ -24,7 +24,7 @@ public class QueryHelper {
             "    on po.id = pt.pokemon_id " +
             "where pdn.pokedex_id = " + pokedexType.ordinal() + " and " +
             "  pt.type_id = " + pokemonType.ordinal() + " and " +
-            "  pt.slot = " + typeSlot  +
+            "  pt.slot = " + typeSlot  + " " +
             "order by pdn.pokedex_number ";
         }
         else {
@@ -44,6 +44,19 @@ public class QueryHelper {
             "  pt.slot = " + typeSlot  + " " +
             "order by pdn.pokedex_number ";
         }
+    }
+
+    public static String pokemonTypeQuery(int identifier, int typeSlot) {
+        return "select po.id as identifier, " +
+        "  ps.identifier as name, " +
+        "  pt.type_id as type " +
+        "from pokemon_species as ps " +
+        "  join pokemon as po " +
+        "    on ps.id = po.species_id " +
+        "  join pokemon_types as pt " +
+        "    on po.id = pt.pokemon_id " +
+        "where po.id = " + identifier + " and " +
+        "  pt.slot = " + typeSlot;
     }
 
 }

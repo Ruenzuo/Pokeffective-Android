@@ -13,17 +13,19 @@ import java.util.ArrayList;
 /**
  * Created by ruenzuo on 16/04/14.
  */
-public class SQLiteTask extends GroundyTask {
+public class PokemonTask extends GroundyTask {
 
     @Override
     protected TaskResult doInBackground() {
+        PokedexType pokedexType = (PokedexType) getArgs().getSerializable("PokedexType");
+        PokemonType pokemonType = (PokemonType) getArgs().getSerializable("PokemonType");
         SQLiteHelper sqliteHelper = new SQLiteHelper(getContext());
         try {
             sqliteHelper.open();
         } catch (SQLException e) {
             return failed();
         }
-        ArrayList<Pokemon> pokemons = sqliteHelper.getPokemons(PokedexType.NATIONAL, PokemonType.NONE);
+        ArrayList<Pokemon> pokemons = sqliteHelper.getPokemons(pokedexType, pokemonType);
         return succeeded().add("Pokemons", pokemons);
     }
 
