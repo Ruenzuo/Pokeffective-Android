@@ -68,6 +68,7 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
     @OnSuccess(PokemonTask.class)
     public void onSuccess(@Param("Pokemons") ArrayList<Pokemon> pokemons) {
         SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+        listAdapter.setShouldAnimateFromPosition(0);
         PokemonAdapter adapter = (PokemonAdapter)listAdapter.getDecoratedBaseAdapter();
         adapter.clear();
         adapter.addAllCopying(pokemons);
@@ -85,6 +86,7 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
     @Override
     public void onSearchStart() {
         SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+        listAdapter.setShouldAnimateFromPosition(0);
         PokemonAdapter adapter = (PokemonAdapter)listAdapter.getDecoratedBaseAdapter();
         adapter.clear();
         adapter.setSearching(true);
@@ -94,6 +96,7 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
     @Override
     public void onSearchCancel() {
         SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+        listAdapter.setShouldAnimateFromPosition(0);
         PokemonAdapter adapter = (PokemonAdapter)listAdapter.getDecoratedBaseAdapter();
         adapter.setSearching(false);
         adapter.restoreCopy();
