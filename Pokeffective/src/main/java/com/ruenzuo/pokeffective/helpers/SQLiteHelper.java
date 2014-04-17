@@ -80,7 +80,8 @@ public class SQLiteHelper {
                 String firstInnerTypeQuery = QueryHelper.pokemonTypeQuery(pokemon.getIdentifier(), FIRST_TYPE_SLOT);
                 Cursor firstInnerTypeCursor = SQLiteDatabase.rawQuery(firstInnerTypeQuery, null);
                 while (firstInnerTypeCursor.moveToNext()) {
-                    pokemon.setSecondType(PokemonType.values()[firstInnerTypeCursor.getInt(firstInnerTypeCursor.getColumnIndex("type"))]);
+                    pokemon.setSecondType(pokemon.getFirstType());
+                    pokemon.setFirstType(PokemonType.values()[firstInnerTypeCursor.getInt(firstInnerTypeCursor.getColumnIndex("type"))]);
                 }
             }
             Collections.sort(pokemons, new PokemonComparator());
