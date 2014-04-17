@@ -3,6 +3,7 @@
     package="com.ruenzuo.pokeffective" >
 
     <application
+        android:name="com.activeandroid.app.Application"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -20,6 +21,8 @@
         <activity android:name=".activities.PokemonListActivity"
             android:label="Pokémon"
             android:screenOrientation="portrait"/>
+        <meta-data android:name="AA_DB_NAME" android:value="Pokeffective.db" />
+        <meta-data android:name="AA_DB_VERSION" android:value="1" />
     </application>
 
 </manifest>

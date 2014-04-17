@@ -1,15 +1,32 @@
 package com.ruenzuo.pokeffective.models;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * Created by ruenzuo on 16/04/14.
  */
-public class Pokemon implements Cloneable {
+@Table(name = "Pokemon")
+public class Pokemon extends Model implements Cloneable, Serializable {
 
+    @Column(name = "identifier")
     private int identifier;
+    @Column(name = "name")
     private String name;
     private int pokedexNumber;
+    @Column(name = "firstType")
     private PokemonType firstType;
+    @Column(name = "secondType")
     private PokemonType secondType;
+
+    public Pokemon(){
+        super();
+    }
 
     private Pokemon(PokemonBuilder builder) {
         this.identifier = builder.identifier;
@@ -57,6 +74,10 @@ public class Pokemon implements Cloneable {
 
     public void setSecondType(PokemonType secondType) {
         this.secondType = secondType;
+    }
+
+    public static List<Pokemon> getAll() {
+        return new Select().from(Pokemon.class).execute();
     }
 
     public Pokemon clone() {

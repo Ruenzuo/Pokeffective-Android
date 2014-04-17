@@ -3,8 +3,10 @@ package com.ruenzuo.pokeffective.activities;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
@@ -67,7 +69,10 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
 
     @Override
     public void onPokemonSelected(Pokemon pokemon) {
-
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("Pokemon", pokemon);
+        setResult(RESULT_OK, returnIntent);
+        finish();
     }
 
     @Override
