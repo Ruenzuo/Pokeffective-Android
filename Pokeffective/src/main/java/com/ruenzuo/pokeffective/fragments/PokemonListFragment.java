@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.ruenzuo.pokeffective.R;
@@ -57,6 +58,13 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
         swingRightInAnimationAdapter.setAbsListView(getListView());
         setListAdapter(swingRightInAnimationAdapter);
         startPokemonTask(PokedexType.NATIONAL, PokemonType.NONE);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        Pokemon pokemon = (Pokemon)getListAdapter().getItem(position);
+        listener.onPokemonSelected(pokemon);
     }
 
     @Override

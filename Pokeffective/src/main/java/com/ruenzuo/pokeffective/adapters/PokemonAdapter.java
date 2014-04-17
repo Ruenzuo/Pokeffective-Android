@@ -18,6 +18,7 @@ import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.models.Pokemon;
 import com.ruenzuo.pokeffective.utils.ColorUtils;
+import com.ruenzuo.pokeffective.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,7 +42,7 @@ public class PokemonAdapter extends ArrayAdapter<Pokemon> implements Filterable 
     }
 
     public PokemonAdapter(Context applicationContext, int resource, ArrayList<Pokemon> items) {
-        super();
+        super(items);
         context = applicationContext;
         itemsCopy = (ArrayList<Pokemon>) items.clone();
         resourceId = resource;
@@ -70,36 +71,7 @@ public class PokemonAdapter extends ArrayAdapter<Pokemon> implements Filterable 
         int resourceId = context.getResources().getIdentifier(resourceName, "drawable", context.getPackageName());
         Drawable drawable = context.getResources().getDrawable(resourceId);
         imgViewPokemonPicture.setImageDrawable(drawable);
-        if (pokemon.getSecondType() != null) {
-            int colors[] = new int[2];
-            colors[0] = pokemon.getFirstType().toColor();
-            colors[1] = pokemon.getSecondType().toColor();
-            int darkerColors[] = new int[2];
-            darkerColors[0] = ColorUtils.darkerColor(colors[0]);
-            darkerColors[1] = ColorUtils.darkerColor(colors[1]);
-            GradientDrawable shapeUnselected = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors);
-            shapeUnselected.setCornerRadius(10 * Resources.getSystem().getDisplayMetrics().density);
-            GradientDrawable shapeSelected = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, darkerColors);
-            shapeSelected.setCornerRadius(10 * Resources.getSystem().getDisplayMetrics().density);
-            StateListDrawable states = new StateListDrawable();
-            states.addState(new int[] {android.R.attr.state_pressed}, shapeSelected);
-            states.addState(new int[] {android.R.attr.state_focused}, shapeSelected);
-            states.addState(new int[] { }, shapeUnselected);
-            convertView.setBackground(states);
-        }
-        else {
-            GradientDrawable shapeUnselected = new GradientDrawable();
-            shapeUnselected.setColor(pokemon.getFirstType().toColor());
-            shapeUnselected.setCornerRadius(10 * Resources.getSystem().getDisplayMetrics().density);
-            GradientDrawable shapeSelected = new GradientDrawable();
-            shapeSelected.setColor(ColorUtils.darkerColor(pokemon.getFirstType().toColor()));
-            shapeSelected.setCornerRadius(10 * Resources.getSystem().getDisplayMetrics().density);
-            StateListDrawable states = new StateListDrawable();
-            states.addState(new int[] {android.R.attr.state_pressed}, shapeSelected);
-            states.addState(new int[] {android.R.attr.state_focused}, shapeSelected);
-            states.addState(new int[] { }, shapeUnselected);
-            convertView.setBackground(states);
-        }
+        convertView.setBackground(ViewUtils.getBackground(pokemon.getFirstType(), pokemon.getSecondType()));
         return convertView;
     }
 
