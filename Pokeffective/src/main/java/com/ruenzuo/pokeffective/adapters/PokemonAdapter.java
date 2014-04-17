@@ -9,12 +9,12 @@ import android.graphics.drawable.StateListDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.models.Pokemon;
 import com.ruenzuo.pokeffective.utils.ColorUtils;
@@ -30,6 +30,7 @@ public class PokemonAdapter extends ArrayAdapter<Pokemon> implements Filterable 
     private int resourceId;
     private ArrayList<Pokemon> itemsCopy;
     private boolean searching;
+    private Context context;
 
     public boolean isSearching() {
         return searching;
@@ -39,8 +40,9 @@ public class PokemonAdapter extends ArrayAdapter<Pokemon> implements Filterable 
         this.searching = searching;
     }
 
-    public PokemonAdapter(Context context, int resource, ArrayList<Pokemon> items) {
-        super(context, resource, items);
+    public PokemonAdapter(Context applicationContext, int resource, ArrayList<Pokemon> items) {
+        super();
+        context = applicationContext;
         itemsCopy = (ArrayList<Pokemon>) items.clone();
         resourceId = resource;
     }
@@ -48,7 +50,7 @@ public class PokemonAdapter extends ArrayAdapter<Pokemon> implements Filterable 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            LayoutInflater inflater = ((Activity)getContext()).getLayoutInflater();
+            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             convertView = inflater.inflate(resourceId, null);
         }
         Pokemon pokemon = getItem(position);
@@ -65,8 +67,8 @@ public class PokemonAdapter extends ArrayAdapter<Pokemon> implements Filterable 
         }
         ImageView imgViewPokemonPicture = (ImageView) convertView.findViewById(R.id.imgViewPokemonPicture);
         String resourceName = String.format("pokemon_%03d", pokemon.getIdentifier());
-        int resourceId = getContext().getResources().getIdentifier(resourceName, "drawable", getContext().getPackageName());
-        Drawable drawable = getContext().getResources().getDrawable(resourceId);
+        int resourceId = context.getResources().getIdentifier(resourceName, "drawable", context.getPackageName());
+        Drawable drawable = context.getResources().getDrawable(resourceId);
         imgViewPokemonPicture.setImageDrawable(drawable);
         if (pokemon.getSecondType() != null) {
             int colors[] = new int[2];
