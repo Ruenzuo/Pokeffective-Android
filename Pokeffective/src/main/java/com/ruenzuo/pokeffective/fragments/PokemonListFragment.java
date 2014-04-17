@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.adapters.PokemonAdapter;
 import com.ruenzuo.pokeffective.definitions.OnPokemonFilterChangedListener;
@@ -52,7 +53,9 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         PokemonAdapter adapter = new PokemonAdapter(getActivity(), R.layout.pokemon_row, new ArrayList<Pokemon>());
-        setListAdapter(adapter);
+        SwingBottomInAnimationAdapter swingRightInAnimationAdapter = new SwingBottomInAnimationAdapter(adapter);
+        swingRightInAnimationAdapter.setAbsListView(getListView());
+        setListAdapter(swingRightInAnimationAdapter);
         startPokemonTask(PokedexType.NATIONAL, PokemonType.NONE);
     }
 
@@ -64,7 +67,8 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
 
     @OnSuccess(PokemonTask.class)
     public void onSuccess(@Param("Pokemons") ArrayList<Pokemon> pokemons) {
-        PokemonAdapter adapter = (PokemonAdapter)getListAdapter();
+        SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+        PokemonAdapter adapter = (PokemonAdapter)listAdapter.getDecoratedBaseAdapter();
         adapter.clear();
         adapter.addAllCopying(pokemons);
         adapter.notifyDataSetChanged();
@@ -72,13 +76,15 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
 
     @Override
     public void onSearchQueryChange(String query) {
-        PokemonAdapter adapter = (PokemonAdapter)getListAdapter();
+        SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+        PokemonAdapter adapter = (PokemonAdapter)listAdapter.getDecoratedBaseAdapter();
         adapter.getFilter().filter(query);
     }
 
     @Override
     public void onSearchStart() {
-        PokemonAdapter adapter = (PokemonAdapter)getListAdapter();
+        SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+        PokemonAdapter adapter = (PokemonAdapter)listAdapter.getDecoratedBaseAdapter();
         adapter.clear();
         adapter.setSearching(true);
         adapter.notifyDataSetChanged();
@@ -86,7 +92,8 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
 
     @Override
     public void onSearchCancel() {
-        PokemonAdapter adapter = (PokemonAdapter)getListAdapter();
+        SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+        PokemonAdapter adapter = (PokemonAdapter)listAdapter.getDecoratedBaseAdapter();
         adapter.setSearching(false);
         adapter.restoreCopy();
     }

@@ -38,6 +38,7 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
         pokemonTypeFilterOption = FilterOption.defaultPokemonTypeFilterOption();
         setContentView(R.layout.pokemon_list_activity);
         getActionBar().setIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         PokemonListFragment fragment = (PokemonListFragment) getFragmentManager().findFragmentById(R.id.pokemonListFragment);
         setListSearchListener(fragment);
         setPokemonFilterListener(fragment);
@@ -68,7 +69,7 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.pokemon_list_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchItem.setOnActionExpandListener(this);
         SearchView searchView = (SearchView)searchItem.getActionView();
@@ -80,7 +81,11 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_search) {
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        else if (id == R.id.action_search) {
             return true;
         }
         else if (id == R.id.action_filter_pokedex) {

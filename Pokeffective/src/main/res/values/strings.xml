@@ -5,6 +5,9 @@
     <string name="filter">Options</string>
     <string name="action_search">Search</string>
     <string name="action_filter">Filter</string>
+    <string name="action_add">Add</string>
+    <string name="action_balance">Balance</string>
+    <string name="action_info">Info</string>
     <string name="pokemon_query_hint">Search for a pókemon</string>
 
 </resources>
