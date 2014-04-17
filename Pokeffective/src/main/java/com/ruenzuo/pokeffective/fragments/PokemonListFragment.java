@@ -72,6 +72,7 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
         adapter.clear();
         adapter.addAllCopying(pokemons);
         adapter.notifyDataSetChanged();
+        getListView().setSelection(0);
     }
 
     @Override

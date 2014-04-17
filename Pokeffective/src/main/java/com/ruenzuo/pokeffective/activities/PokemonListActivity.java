@@ -28,12 +28,15 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
     private OnPokemonListSearchListener listSearchListener;
     private OnPokemonFilterChangedListener pokemonFilterListener;
     private MenuItem filterItem;
+    private MenuItem clearItem;
     private FilterOption pokedexFilterOption;
     private FilterOption pokemonTypeFilterOption;
+    private boolean filterActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        filterActive = false;
         pokedexFilterOption = FilterOption.defaultPokedexFilterOption();
         pokemonTypeFilterOption = FilterOption.defaultPokemonTypeFilterOption();
         setContentView(R.layout.pokemon_list_activity);
@@ -70,6 +73,12 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.pokemon_list_menu, menu);
+        if (filterActive) {
+            menu.add(Menu.NONE, R.id.action_clear, Menu.NONE, "Clear")
+                    .setIcon(getResources().getDrawable(R.drawable.ic_action_trash))
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            clearItem = menu.findItem(R.id.action_clear);
+        }
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchItem.setOnActionExpandListener(this);
         SearchView searchView = (SearchView)searchItem.getActionView();
@@ -99,6 +108,15 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
             DialogFragment dialog = FilterDialogFragment.newInstance(option);
             dialog.show(getFragmentManager(), "FilterDialogFragment");
         }
+        else if (id == R.id.action_clear) {
+            pokedexFilterOption = FilterOption.defaultPokedexFilterOption();
+            pokemonTypeFilterOption = FilterOption.defaultPokemonTypeFilterOption();
+            pokemonFilterListener.onPokemonFilterChanged((PokedexType) pokedexFilterOption.getValue(),
+                    (PokemonType) pokemonTypeFilterOption.getValue());
+            filterActive = false;
+            invalidateOptionsMenu();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -126,6 +144,9 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
         filterItem.setVisible(false);
+        if (filterActive) {
+            clearItem.setVisible(false);
+        }
         listSearchListener.onSearchStart();
         return true;
     }
@@ -133,12 +154,17 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         filterItem.setVisible(true);
+        if (filterActive) {
+            clearItem.setVisible(true);
+        }
         listSearchListener.onSearchCancel();
         return true;
     }
 
     @Override
     public void onFilterOptionChanged(FilterOption filterOption) {
+        filterActive = true;
+        invalidateOptionsMenu();
         switch (filterOption.getFilterType()) {
             case POKEDEX_TYPE:
                 pokedexFilterOption = filterOption;
