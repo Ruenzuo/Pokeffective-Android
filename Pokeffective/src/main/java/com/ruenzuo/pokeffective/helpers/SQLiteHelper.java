@@ -40,24 +40,51 @@ public class SQLiteHelper {
     }
 
     public ArrayList<Pokemon> getPokemons(PokedexType pokedexType, PokemonType pokemonType) {
-        Hashtable pokemonTable = new Hashtable();
-        String firstTypeQuery = QueryHelper.pokemonSearchQuery(pokedexType, pokemonType, FIRST_TYPE_SLOT);
-        Cursor firstTypeCursor = SQLiteDatabase.rawQuery(firstTypeQuery, null);
-        while (firstTypeCursor.moveToNext()) {
-            Pokemon pokemon = TranslatorHelper.translatePokemon(firstTypeCursor);
-            pokemonTable.put(pokemon.getName(), pokemon);
-        }
-        String secondTypeQuery = QueryHelper.pokemonSearchQuery(pokedexType, pokemonType, SECOND_TYPE_SLOT);
-        Cursor secondTypeCursor = SQLiteDatabase.rawQuery(secondTypeQuery, null);
-        while (secondTypeCursor.moveToNext()) {
-            String name = secondTypeCursor.getString(secondTypeCursor.getColumnIndex("name"));
-            Pokemon pokemon = (Pokemon) pokemonTable.get(StringUtils.capitalize(name));
-            int secondType = secondTypeCursor.getInt(secondTypeCursor.getColumnIndex("type"));
-            pokemon.setSecondType(PokemonType.values()[secondType]);
-        }
         ArrayList<Pokemon> pokemons = new ArrayList<Pokemon>();
-        pokemons.addAll(pokemonTable.values());
-        Collections.sort(pokemons, new PokemonComparator());
+        if (pokemonType == PokemonType.NONE) {
+            Hashtable pokemonTable = new Hashtable();
+            String firstTypeQuery = QueryHelper.pokemonSearchQuery(pokedexType, pokemonType, FIRST_TYPE_SLOT);
+            Cursor firstTypeCursor = SQLiteDatabase.rawQuery(firstTypeQuery, null);
+            while (firstTypeCursor.moveToNext()) {
+                Pokemon pokemon = TranslatorHelper.translatePokemon(firstTypeCursor);
+                pokemonTable.put(pokemon.getName(), pokemon);
+            }
+            String secondTypeQuery = QueryHelper.pokemonSearchQuery(pokedexType, pokemonType, SECOND_TYPE_SLOT);
+            Cursor secondTypeCursor = SQLiteDatabase.rawQuery(secondTypeQuery, null);
+            while (secondTypeCursor.moveToNext()) {
+                String name = secondTypeCursor.getString(secondTypeCursor.getColumnIndex("name"));
+                Pokemon pokemon = (Pokemon) pokemonTable.get(StringUtils.capitalize(name));
+                int secondType = secondTypeCursor.getInt(secondTypeCursor.getColumnIndex("type"));
+                pokemon.setSecondType(PokemonType.values()[secondType]);
+            }
+            pokemons.addAll(pokemonTable.values());
+            Collections.sort(pokemons, new PokemonComparator());
+        }
+        else {
+            String firstTypeQuery = QueryHelper.pokemonSearchQuery(pokedexType, pokemonType, FIRST_TYPE_SLOT);
+            Cursor firstTypeCursor = SQLiteDatabase.rawQuery(firstTypeQuery, null);
+            while (firstTypeCursor.moveToNext()) {
+                Pokemon pokemon = TranslatorHelper.translatePokemon(firstTypeCursor);
+                pokemons.add(pokemon);
+                String secondInnerTypeQuery = QueryHelper.pokemonTypeQuery(pokemon.getIdentifier(), SECOND_TYPE_SLOT);
+                Cursor secondInnerTypeCursor = SQLiteDatabase.rawQuery(secondInnerTypeQuery, null);
+                while (secondInnerTypeCursor.moveToNext()) {
+                    pokemon.setSecondType(PokemonType.values()[secondInnerTypeCursor.getInt(secondInnerTypeCursor.getColumnIndex("type"))]);
+                }
+            }
+            String secondTypeQuery = QueryHelper.pokemonSearchQuery(pokedexType, pokemonType, SECOND_TYPE_SLOT);
+            Cursor secondTypeCursor = SQLiteDatabase.rawQuery(secondTypeQuery, null);
+            while (secondTypeCursor.moveToNext()) {
+                Pokemon pokemon = TranslatorHelper.translatePokemon(secondTypeCursor);
+                pokemons.add(pokemon);
+                String firstInnerTypeQuery = QueryHelper.pokemonTypeQuery(pokemon.getIdentifier(), FIRST_TYPE_SLOT);
+                Cursor firstInnerTypeCursor = SQLiteDatabase.rawQuery(firstInnerTypeQuery, null);
+                while (firstInnerTypeCursor.moveToNext()) {
+                    pokemon.setSecondType(PokemonType.values()[firstInnerTypeCursor.getInt(firstInnerTypeCursor.getColumnIndex("type"))]);
+                }
+            }
+            Collections.sort(pokemons, new PokemonComparator());
+        }
         return pokemons;
     }
 

@@ -2,6 +2,7 @@ package com.ruenzuo.pokeffective.activities;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,16 +13,20 @@ import android.widget.TextView;
 
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.definitions.OnFilterOptionChangedListener;
+import com.ruenzuo.pokeffective.definitions.OnPokemonFilterChangedListener;
 import com.ruenzuo.pokeffective.definitions.OnPokemonListSearchListener;
 import com.ruenzuo.pokeffective.definitions.OnPokemonSelectedListener;
 import com.ruenzuo.pokeffective.fragments.FilterDialogFragment;
 import com.ruenzuo.pokeffective.fragments.PokemonListFragment;
 import com.ruenzuo.pokeffective.models.FilterOption;
+import com.ruenzuo.pokeffective.models.PokedexType;
 import com.ruenzuo.pokeffective.models.Pokemon;
+import com.ruenzuo.pokeffective.models.PokemonType;
 
 public class PokemonListActivity extends Activity implements OnPokemonSelectedListener, SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener, OnFilterOptionChangedListener {
 
-    private OnPokemonListSearchListener listener;
+    private OnPokemonListSearchListener listSearchListener;
+    private OnPokemonFilterChangedListener pokemonFilterListener;
     private MenuItem filterItem;
     private FilterOption pokedexFilterOption;
     private FilterOption pokemonTypeFilterOption;
@@ -34,7 +39,26 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
         setContentView(R.layout.pokemon_list_activity);
         getActionBar().setIcon(getResources().getDrawable(R.drawable.ic_action_back));
         PokemonListFragment fragment = (PokemonListFragment) getFragmentManager().findFragmentById(R.id.pokemonListFragment);
-        listener = fragment;
+        setListSearchListener(fragment);
+        setPokemonFilterListener(fragment);
+    }
+
+    private void setListSearchListener(Fragment fragment) {
+        try {
+            listSearchListener = (OnPokemonListSearchListener) fragment;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(fragment.toString()
+                    + " must implement OnFilterOptionChangedListener");
+        }
+    }
+
+    private void setPokemonFilterListener(Fragment fragment) {
+        try {
+            pokemonFilterListener = (OnPokemonFilterChangedListener) fragment;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(fragment.toString()
+                    + " must implement OnFilterOptionChangedListener");
+        }
     }
 
     @Override
@@ -90,21 +114,21 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        listener.onSearchQueryChange(newText);
+        listSearchListener.onSearchQueryChange(newText);
         return false;
     }
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
         filterItem.setVisible(false);
-        listener.onSearchStart();
+        listSearchListener.onSearchStart();
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         filterItem.setVisible(true);
-        listener.onSearchCancel();
+        listSearchListener.onSearchCancel();
         return true;
     }
 
@@ -118,6 +142,8 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
                 pokemonTypeFilterOption = filterOption;
                 break;
         }
+        pokemonFilterListener.onPokemonFilterChanged((PokedexType) pokedexFilterOption.getValue(),
+                (PokemonType) pokemonTypeFilterOption.getValue());
     }
 
 }

@@ -1,7 +1,6 @@
 package com.ruenzuo.pokeffective.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ruenzuo.pokeffective.R;
-import com.ruenzuo.pokeffective.activities.PokemonListActivity;
 import com.ruenzuo.pokeffective.adapters.PokemonAdapter;
+import com.ruenzuo.pokeffective.definitions.OnPokemonFilterChangedListener;
 import com.ruenzuo.pokeffective.definitions.OnPokemonListSearchListener;
 import com.ruenzuo.pokeffective.definitions.OnPokemonSelectedListener;
+import com.ruenzuo.pokeffective.models.PokedexType;
 import com.ruenzuo.pokeffective.models.Pokemon;
-import com.ruenzuo.pokeffective.tasks.SQLiteTask;
+import com.ruenzuo.pokeffective.models.PokemonType;
+import com.ruenzuo.pokeffective.tasks.PokemonTask;
 import com.telly.groundy.Groundy;
 import com.telly.groundy.annotations.OnSuccess;
 import com.telly.groundy.annotations.Param;
@@ -24,9 +25,17 @@ import java.util.ArrayList;
 /**
  * Created by ruenzuo on 16/04/14.
  */
-public class PokemonListFragment extends ListFragment implements OnPokemonListSearchListener {
+public class PokemonListFragment extends ListFragment implements OnPokemonListSearchListener, OnPokemonFilterChangedListener {
 
     private OnPokemonSelectedListener listener;
+
+    private void startPokemonTask(PokedexType pokedexType, PokemonType pokemonType) {
+        Groundy.create(PokemonTask.class)
+                .arg("PokedexType", pokedexType)
+                .arg("PokemonType", pokemonType)
+                .callback(this)
+                .queueUsing(getActivity());
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -44,7 +53,7 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
         super.onActivityCreated(savedInstanceState);
         PokemonAdapter adapter = new PokemonAdapter(getActivity(), R.layout.pokemon_row, new ArrayList<Pokemon>());
         setListAdapter(adapter);
-        Groundy.create(SQLiteTask.class).callback(this).queueUsing(getActivity());
+        startPokemonTask(PokedexType.NATIONAL, PokemonType.NONE);
     }
 
     @Override
@@ -53,7 +62,7 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
         return view;
     }
 
-    @OnSuccess(SQLiteTask.class)
+    @OnSuccess(PokemonTask.class)
     public void onSuccess(@Param("Pokemons") ArrayList<Pokemon> pokemons) {
         PokemonAdapter adapter = (PokemonAdapter)getListAdapter();
         adapter.clear();
@@ -80,6 +89,11 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
         PokemonAdapter adapter = (PokemonAdapter)getListAdapter();
         adapter.setSearching(false);
         adapter.restoreCopy();
+    }
+
+    @Override
+    public void onPokemonFilterChanged(PokedexType pokedexType, PokemonType pokemonType) {
+        startPokemonTask(pokedexType, pokemonType);
     }
 
 }

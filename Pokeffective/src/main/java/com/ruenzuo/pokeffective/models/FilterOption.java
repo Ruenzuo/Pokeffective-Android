@@ -47,7 +47,7 @@ public class FilterOption implements Serializable, Cloneable {
     }
 
     public static FilterOption defaultPokemonTypeFilterOption() {
-        return new FilterOptionBuilder("Filtering by pokémon type", FilterType.POKEMON_TYPE).value(PokedexType.NONE).build();
+        return new FilterOptionBuilder("Filtering by pokémon type", FilterType.POKEMON_TYPE).value(PokemonType.NONE).build();
     }
 
     public FilterOption clone() {
