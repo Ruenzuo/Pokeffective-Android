@@ -19,6 +19,15 @@ public enum PokemonType {
         color = clr;
     }
 
+    public static CharSequence[] pokemonTypes() {
+        int length = PokemonType.values().length;
+        CharSequence[] typesPrint = new String[length];
+        for (int i = 0; i < length; i++) {
+            typesPrint[i] = PokemonType.values()[i].toString();
+        }
+        return typesPrint;
+    }
+
     public String toString(){
         return print;
     }

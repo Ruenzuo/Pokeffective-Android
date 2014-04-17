@@ -18,8 +18,7 @@ public enum PokedexType {
         print = prt;
     }
 
-    public static CharSequence[] pokedexTypes()
-    {
+    public static CharSequence[] pokedexTypes() {
         CharSequence[] typesPrint = new String[9];
         typesPrint[0] = NATIONAL.toString();
         typesPrint[1] = KANTO.toString();
