@@ -10,7 +10,8 @@
         android:logo="@drawable/ic_action_back">
         <activity
             android:name=".activities.PokemonListActivity"
-            android:label="Pokémon" >
+            android:label="Pokémon"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
