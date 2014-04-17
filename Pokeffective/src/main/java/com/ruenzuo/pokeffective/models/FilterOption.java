@@ -1,11 +1,12 @@
 package com.ruenzuo.pokeffective.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by ruenzuo on 17/04/14.
  */
-public class FilterOption {
+public class FilterOption implements Serializable, Cloneable {
 
     private String label;
     private Object value;
@@ -41,13 +42,21 @@ public class FilterOption {
         this.filterType = filterType;
     }
 
-    public static ArrayList<FilterOption> pokemonFilterOptions() {
-        ArrayList<FilterOption> options = new ArrayList<FilterOption>();
-        FilterOption optionPokedex = new FilterOptionBuilder("Filtering by Pokédex", FilterType.POKEDEX_TYPE).build();
-        FilterOption optionType = new FilterOptionBuilder("Filtering by type", FilterType.POKEMON_TYPE).build();
-        options.add(optionPokedex);
-        options.add(optionType);
-        return options;
+    public static FilterOption defaultPokedexFilterOption() {
+        return new FilterOptionBuilder("Filtering by pokédex", FilterType.POKEDEX_TYPE).value(PokedexType.NATIONAL).build();
+    }
+
+    public static FilterOption defaultPokemonTypeFilterOption() {
+        return new FilterOptionBuilder("Filtering by pokémon type", FilterType.POKEMON_TYPE).value(PokedexType.NONE).build();
+    }
+
+    public FilterOption clone() {
+        try {
+            return (FilterOption) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
     }
 
     private static class FilterOptionBuilder {

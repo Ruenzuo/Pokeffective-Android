@@ -1,7 +1,7 @@
 package com.ruenzuo.pokeffective.activities;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,18 +11,26 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.ruenzuo.pokeffective.R;
+import com.ruenzuo.pokeffective.definitions.OnFilterOptionChangedListener;
 import com.ruenzuo.pokeffective.definitions.OnPokemonListSearchListener;
 import com.ruenzuo.pokeffective.definitions.OnPokemonSelectedListener;
+import com.ruenzuo.pokeffective.fragments.FilterDialogFragment;
 import com.ruenzuo.pokeffective.fragments.PokemonListFragment;
+import com.ruenzuo.pokeffective.models.FilterOption;
 import com.ruenzuo.pokeffective.models.Pokemon;
 
-public class PokemonListActivity extends Activity implements OnPokemonSelectedListener, SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
+public class PokemonListActivity extends Activity implements OnPokemonSelectedListener, SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener, OnFilterOptionChangedListener {
 
     private OnPokemonListSearchListener listener;
+    private MenuItem filterItem;
+    private FilterOption pokedexFilterOption;
+    private FilterOption pokemonTypeFilterOption;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pokedexFilterOption = FilterOption.defaultPokedexFilterOption();
+        pokemonTypeFilterOption = FilterOption.defaultPokemonTypeFilterOption();
         setContentView(R.layout.pokemon_list_activity);
         getActionBar().setIcon(getResources().getDrawable(R.drawable.ic_action_back));
         PokemonListFragment fragment = (PokemonListFragment) getFragmentManager().findFragmentById(R.id.pokemonListFragment);
@@ -41,6 +49,7 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
         searchItem.setOnActionExpandListener(this);
         SearchView searchView = (SearchView)searchItem.getActionView();
         setupSearchView(searchView);
+        filterItem = menu.findItem(R.id.action_filter);
         return true;
     }
 
@@ -50,9 +59,16 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
         if (id == R.id.action_search) {
             return true;
         }
-        else if (id == R.id.action_filter) {
-            Intent intent = new Intent(getApplicationContext(), FilterOptionMenuActivity.class);
-            startActivity(intent);
+        else if (id == R.id.action_filter_pokedex) {
+            FilterOption option = pokedexFilterOption.clone();
+            DialogFragment dialog = FilterDialogFragment.newInstance(option);
+            dialog.show(getFragmentManager(), "FilterDialogFragment");
+            return true;
+        }
+        else if (id == R.id.action_filter_pokemon_type) {
+            FilterOption option = pokemonTypeFilterOption.clone();
+            DialogFragment dialog = FilterDialogFragment.newInstance(option);
+            dialog.show(getFragmentManager(), "FilterDialogFragment");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -80,13 +96,28 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
+        filterItem.setVisible(false);
         listener.onSearchStart();
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
+        filterItem.setVisible(true);
         listener.onSearchCancel();
         return true;
     }
+
+    @Override
+    public void onFilterOptionChanged(FilterOption filterOption) {
+        switch (filterOption.getFilterType()) {
+            case POKEDEX_TYPE:
+                pokedexFilterOption = filterOption;
+                break;
+            case POKEMON_TYPE:
+                pokemonTypeFilterOption = filterOption;
+                break;
+        }
+    }
+
 }
