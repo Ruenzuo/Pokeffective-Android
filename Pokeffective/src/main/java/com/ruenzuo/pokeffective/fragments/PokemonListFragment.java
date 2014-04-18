@@ -58,6 +58,7 @@ public class PokemonListFragment extends ListFragment implements OnPokemonListSe
         swingRightInAnimationAdapter.setAbsListView(getListView());
         setListAdapter(swingRightInAnimationAdapter);
         startPokemonTask(PokedexType.NATIONAL, PokemonType.NONE);
+        getListView().setEmptyView(getActivity().findViewById(R.id.txtViewNoPokemonResults));
     }
 
     @Override
