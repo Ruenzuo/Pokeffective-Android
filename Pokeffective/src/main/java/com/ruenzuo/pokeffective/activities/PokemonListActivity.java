@@ -54,7 +54,7 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
             listSearchListener = (OnPokemonListSearchListener) fragment;
         } catch (ClassCastException e) {
             throw new ClassCastException(fragment.toString()
-                    + " must implement OnFilterOptionChangedListener");
+                    + " must implement OnPokemonListSearchListener");
         }
     }
 
@@ -63,7 +63,7 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
             pokemonFilterListener = (OnPokemonFilterChangedListener) fragment;
         } catch (ClassCastException e) {
             throw new ClassCastException(fragment.toString()
-                    + " must implement OnFilterOptionChangedListener");
+                    + " must implement OnPokemonFilterChangedListener");
         }
     }
 
