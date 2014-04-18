@@ -22,6 +22,8 @@ public class MovesetListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.moveset_list_activity);
+        getActionBar().setIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             Pokemon pokemon = (Pokemon) extras.getSerializable("Pokemon");

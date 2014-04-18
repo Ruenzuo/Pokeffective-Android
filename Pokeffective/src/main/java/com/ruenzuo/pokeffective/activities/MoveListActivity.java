@@ -23,6 +23,8 @@ public class MoveListActivity extends Activity implements OnMoveSelectedListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.move_list_activity);
         Bundle extras = getIntent().getExtras();
+        getActionBar().setIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         if (extras != null) {
             Pokemon pokemon = (Pokemon) extras.getSerializable("Pokemon");
             getActionBar().setTitle(pokemon.getName());
@@ -44,6 +46,7 @@ public class MoveListActivity extends Activity implements OnMoveSelectedListener
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
+            setResult(RESULT_CANCELED, null);
             finish();
             return true;
         } else if (id == R.id.action_move_search) {
