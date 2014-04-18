@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.adapters.MoveAdapter;
+import com.ruenzuo.pokeffective.definitions.OnMoveListSearchListener;
 import com.ruenzuo.pokeffective.definitions.OnMoveSelectedListener;
 import com.ruenzuo.pokeffective.definitions.OnPokemonSelectedListener;
 import com.ruenzuo.pokeffective.models.Move;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 /**
  * Created by ruenzuo on 18/04/14.
  */
-public class MoveListFragment extends ListFragment {
+public class MoveListFragment extends ListFragment implements OnMoveListSearchListener {
 
     private OnMoveSelectedListener listener;
 
@@ -87,6 +88,32 @@ public class MoveListFragment extends ListFragment {
         adapter.addAllCopying(moves);
         adapter.notifyDataSetChanged();
         getListView().setSelection(0);
+    }
+
+    @Override
+    public void onSearchQueryChange(String query) {
+        SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+        MoveAdapter adapter = (MoveAdapter)listAdapter.getDecoratedBaseAdapter();
+        adapter.getFilter().filter(query);
+    }
+
+    @Override
+    public void onSearchStart() {
+        SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+        listAdapter.setShouldAnimateFromPosition(0);
+        MoveAdapter adapter = (MoveAdapter)listAdapter.getDecoratedBaseAdapter();
+        adapter.clear();
+        adapter.setSearching(true);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSearchCancel() {
+        SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+        listAdapter.setShouldAnimateFromPosition(0);
+        MoveAdapter adapter = (MoveAdapter)listAdapter.getDecoratedBaseAdapter();
+        adapter.setSearching(false);
+        adapter.restoreCopy();
     }
 
 }
