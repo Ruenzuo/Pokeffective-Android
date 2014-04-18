@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
@@ -148,7 +149,10 @@ public class MoveListActivity extends Activity implements OnMoveSelectedListener
 
     @Override
     public void onMoveSelected(Move move) {
-
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("Move", move);
+        setResult(RESULT_OK, returnIntent);
+        finish();
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.ruenzuo.pokeffective.R;
@@ -89,6 +90,13 @@ public class MoveListFragment extends ListFragment implements OnMoveListSearchLi
         adapter.addAllCopying(moves);
         adapter.notifyDataSetChanged();
         getListView().setSelection(0);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        Move move = (Move)getListAdapter().getItem(position);
+        listener.onMoveSelected(move);
     }
 
     @Override

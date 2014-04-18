@@ -24,10 +24,12 @@ public class Pokemon extends Model implements Cloneable, Serializable {
     private PokemonType firstType;
     @Column(name = "secondType")
     private PokemonType secondType;
-    @Column(name = "moves")
-    private ArrayList<Move> moves;
     @Column(name = "evolution")
     private boolean evolution;
+
+    public List<Move> moves() {
+        return getMany(Move.class, "Pokemon");
+    }
 
     public Pokemon(){
         super();
@@ -39,7 +41,6 @@ public class Pokemon extends Model implements Cloneable, Serializable {
         this.pokedexNumber = builder.pokedexNumber;
         this.firstType = builder.firstType;
         this.secondType = builder.secondType;
-        this.moves = builder.moves;
         this.evolution = builder.evolution;
     }
 
@@ -83,18 +84,6 @@ public class Pokemon extends Model implements Cloneable, Serializable {
         this.secondType = secondType;
     }
 
-    public ArrayList<Move> getMoves() {
-        return moves;
-    }
-
-    public void setMoves(ArrayList<Move> moves) {
-        this.moves = moves;
-    }
-
-    public void addMove(Move move) {
-        moves.add(move);
-    }
-
     public boolean isEvolution() {
         return evolution;
     }
@@ -105,6 +94,10 @@ public class Pokemon extends Model implements Cloneable, Serializable {
 
     public static List<Pokemon> getAll() {
         return new Select().from(Pokemon.class).execute();
+    }
+
+    public static Pokemon getStored(Pokemon pokemon) {
+        return new Select().from(Pokemon.class).where("identifier = ?", pokemon.getIdentifier()).executeSingle();
     }
 
     public Pokemon clone() {
@@ -123,7 +116,6 @@ public class Pokemon extends Model implements Cloneable, Serializable {
         private int pokedexNumber;
         private PokemonType firstType;
         private PokemonType secondType;
-        private ArrayList<Move> moves;
         private boolean evolution;
 
         public PokemonBuilder(int identifier, String name) {
@@ -143,11 +135,6 @@ public class Pokemon extends Model implements Cloneable, Serializable {
 
         public PokemonBuilder secondType(PokemonType secondType) {
             this.secondType = secondType;
-            return this;
-        }
-
-        public PokemonBuilder moves(ArrayList<Move> moves) {
-            this.moves = moves;
             return this;
         }
 
