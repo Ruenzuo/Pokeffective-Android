@@ -1,6 +1,7 @@
 package com.ruenzuo.pokeffective.activities;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.graphics.Color;
@@ -12,34 +13,50 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.ruenzuo.pokeffective.R;
+import com.ruenzuo.pokeffective.definitions.OnFilterOptionChangedListener;
+import com.ruenzuo.pokeffective.definitions.OnMoveFilterChangedListener;
 import com.ruenzuo.pokeffective.definitions.OnMoveListSearchListener;
 import com.ruenzuo.pokeffective.definitions.OnMoveSelectedListener;
+import com.ruenzuo.pokeffective.fragments.FilterDialogFragment;
 import com.ruenzuo.pokeffective.fragments.MoveListFragment;
+import com.ruenzuo.pokeffective.models.FilterOption;
 import com.ruenzuo.pokeffective.models.Move;
+import com.ruenzuo.pokeffective.models.MoveCategory;
+import com.ruenzuo.pokeffective.models.MoveLearnMethod;
+import com.ruenzuo.pokeffective.models.PokedexType;
 import com.ruenzuo.pokeffective.models.Pokemon;
+import com.ruenzuo.pokeffective.models.PokemonType;
 
 /**
  * Created by ruenzuo on 18/04/14.
  */
-public class MoveListActivity extends Activity implements OnMoveSelectedListener, MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener {
+public class MoveListActivity extends Activity implements OnMoveSelectedListener, MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener, OnFilterOptionChangedListener {
 
     private OnMoveListSearchListener listSearchListener;
+    private OnMoveFilterChangedListener moveFilterListener;
     private MenuItem filterItem;
     private MenuItem clearItem;
     private boolean filterActive;
+    private FilterOption learnMethodFilterOption;
+    private FilterOption moveTypeFilterOption;
+    private FilterOption categoryFilterOption;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.move_list_activity);
-        Bundle extras = getIntent().getExtras();
+        setContentView(R.layout.move_list_activity);filterActive = false;
+        learnMethodFilterOption = FilterOption.defaultMoveLearnMethodFilterOption();
+        moveTypeFilterOption = FilterOption.defaultMoveTypeFilterOption();
+        categoryFilterOption = FilterOption.defaultMoveCategoryFilterOption();
         getActionBar().setIcon(getResources().getDrawable(R.drawable.ic_action_back));
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        Bundle extras = getIntent().getExtras();
         if (extras != null) {
             Pokemon pokemon = (Pokemon) extras.getSerializable("Pokemon");
             getActionBar().setTitle(pokemon.getName());
             MoveListFragment fragment = MoveListFragment.newInstance(pokemon);
             setListSearchListener(fragment);
+            setMoveFilterListener(fragment);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.moveListFragmentPlaceholder, fragment);
             transaction.commit();
@@ -55,6 +72,15 @@ public class MoveListActivity extends Activity implements OnMoveSelectedListener
         }
     }
 
+    private void setMoveFilterListener(Fragment fragment) {
+        try {
+            moveFilterListener = (OnMoveFilterChangedListener) fragment;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(fragment.toString()
+                    + " must implement OnMoveFilterChangedListener");
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.move_list_menu, menu);
@@ -62,7 +88,7 @@ public class MoveListActivity extends Activity implements OnMoveSelectedListener
             menu.add(Menu.NONE, R.id.action_move_filter_clear, Menu.NONE, "Clear")
                     .setIcon(getResources().getDrawable(R.drawable.ic_action_trash))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            clearItem = menu.findItem(R.id.action_pokemon_filter_clear);
+            clearItem = menu.findItem(R.id.action_move_filter_clear);
         }
         MenuItem searchItem = menu.findItem(R.id.action_move_search);
         searchItem.setOnActionExpandListener(this);
@@ -79,7 +105,34 @@ public class MoveListActivity extends Activity implements OnMoveSelectedListener
             setResult(RESULT_CANCELED, null);
             finish();
             return true;
-        } else if (id == R.id.action_move_search) {
+        }
+        else if (id == R.id.action_move_search) {
+            return true;
+        }
+        else if (id == R.id.action_move_filter_category) {
+            FilterOption option = categoryFilterOption.clone();
+            DialogFragment dialog = FilterDialogFragment.newInstance(option);
+            dialog.show(getFragmentManager(), "FilterDialogFragment");
+            return true;
+        }
+        else if (id == R.id.action_move_filter_learn_method) {
+            FilterOption option = learnMethodFilterOption.clone();
+            DialogFragment dialog = FilterDialogFragment.newInstance(option);
+            dialog.show(getFragmentManager(), "FilterDialogFragment");
+        }
+        else if (id == R.id.action_move_filter_type) {
+            FilterOption option = moveTypeFilterOption.clone();
+            DialogFragment dialog = FilterDialogFragment.newInstance(option);
+            dialog.show(getFragmentManager(), "FilterDialogFragment");
+        }
+        else if (id == R.id.action_move_filter_clear) {
+            categoryFilterOption = FilterOption.defaultMoveCategoryFilterOption();
+            learnMethodFilterOption = FilterOption.defaultMoveLearnMethodFilterOption();
+            moveTypeFilterOption = FilterOption.defaultMoveTypeFilterOption();
+            moveFilterListener.onMoveFilterChanged((MoveCategory) categoryFilterOption.getValue(),
+                    (MoveLearnMethod) learnMethodFilterOption.getValue(), (PokemonType) moveTypeFilterOption.getValue());
+            filterActive = false;
+            invalidateOptionsMenu();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -129,5 +182,26 @@ public class MoveListActivity extends Activity implements OnMoveSelectedListener
     public boolean onQueryTextChange(String newText) {
         listSearchListener.onSearchQueryChange(newText);
         return false;
+    }
+
+    @Override
+    public void onFilterOptionChanged(FilterOption filterOption) {
+        filterActive = true;
+        invalidateOptionsMenu();
+        switch (filterOption.getFilterType()) {
+            case MOVE_CATEGORY:
+                categoryFilterOption = filterOption;
+                break;
+            case MOVE_LEARN_METHOD:
+                learnMethodFilterOption = filterOption;
+                break;
+            case MOVE_TYPE:
+                moveTypeFilterOption = filterOption;
+                break;
+            default:
+                break;
+        }
+        moveFilterListener.onMoveFilterChanged((MoveCategory) categoryFilterOption.getValue(),
+                (MoveLearnMethod) learnMethodFilterOption.getValue(), (PokemonType) moveTypeFilterOption.getValue());
     }
 }

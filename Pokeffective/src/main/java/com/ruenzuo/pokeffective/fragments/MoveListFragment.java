@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.adapters.MoveAdapter;
+import com.ruenzuo.pokeffective.definitions.OnMoveFilterChangedListener;
 import com.ruenzuo.pokeffective.definitions.OnMoveListSearchListener;
 import com.ruenzuo.pokeffective.definitions.OnMoveSelectedListener;
 import com.ruenzuo.pokeffective.definitions.OnPokemonSelectedListener;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 /**
  * Created by ruenzuo on 18/04/14.
  */
-public class MoveListFragment extends ListFragment implements OnMoveListSearchListener {
+public class MoveListFragment extends ListFragment implements OnMoveListSearchListener, OnMoveFilterChangedListener {
 
     private OnMoveSelectedListener listener;
 
@@ -116,4 +117,8 @@ public class MoveListFragment extends ListFragment implements OnMoveListSearchLi
         adapter.restoreCopy();
     }
 
+    @Override
+    public void onMoveFilterChanged(MoveCategory category, MoveLearnMethod learnMethod, PokemonType moveType) {
+        startMoveTask(category, learnMethod, moveType);
+    }
 }

@@ -16,10 +16,10 @@ public enum MoveLearnMethod implements Serializable {
     }
 
     public static CharSequence[] moveLearnMethods() {
-        int length = MoveCategory.values().length;
+        int length = MoveLearnMethod.values().length;
         CharSequence[] categoriesPrint = new String[length];
         for (int i = 0; i < length; i++) {
-            categoriesPrint[i] = MoveCategory.values()[i].toString();
+            categoriesPrint[i] = MoveLearnMethod.values()[i].toString();
         }
         return categoriesPrint;
     }
