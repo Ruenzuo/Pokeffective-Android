@@ -12,28 +12,30 @@ import android.widget.GridView;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.adapters.BoxAdapter;
-import com.ruenzuo.pokeffective.adapters.PokemonAdapter;
+import com.ruenzuo.pokeffective.definitions.OnConfirmListener;
+import com.ruenzuo.pokeffective.fragments.ConfirmDialogFragment;
 import com.ruenzuo.pokeffective.models.Pokemon;
 import com.ruenzuo.pokeffective.tasks.BoxTask;
-import com.ruenzuo.pokeffective.tasks.PokemonTask;
 import com.telly.groundy.Groundy;
 import com.telly.groundy.annotations.OnSuccess;
 import com.telly.groundy.annotations.Param;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
  * Created by ruenzuo on 17/04/14.
  */
-public class BoxActivity extends Activity {
+public class BoxActivity extends Activity implements OnConfirmListener {
 
     private GridView gridView;
     private static final int POKEMON_REQUEST_CODE = 1;
+    private static final int INVALID_POSITION = -1;
+    private int lastHoldPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lastHoldPosition = INVALID_POSITION;
         setContentView(R.layout.box_activity);
         getActionBar().setTitle("Box");
         gridView = (GridView) findViewById(R.id.gridView);
@@ -44,7 +46,12 @@ public class BoxActivity extends Activity {
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
+                lastHoldPosition = position;
+                SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)gridView.getAdapter();
+                BoxAdapter adapter = (BoxAdapter)listAdapter.getDecoratedBaseAdapter();
+                Pokemon pokemon = adapter.get(position);
+                ConfirmDialogFragment dialog = ConfirmDialogFragment.newInstance("Remove " + pokemon.getName() + " from box?");
+                dialog.show(getFragmentManager(), "ConfirmDialogFragment");
                 return true;
             }
         });
@@ -115,4 +122,18 @@ public class BoxActivity extends Activity {
         }
     }
 
+    @Override
+    public void onConfirm(boolean confirmed) {
+        if (confirmed && lastHoldPosition != INVALID_POSITION) {
+            SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)gridView.getAdapter();
+            BoxAdapter adapter = (BoxAdapter)listAdapter.getDecoratedBaseAdapter();
+            Pokemon pokemon = adapter.get(lastHoldPosition);
+            pokemon.delete();
+            adapter.remove(lastHoldPosition);
+            listAdapter.setShouldAnimateFromPosition(lastHoldPosition);
+            adapter.notifyDataSetChanged();
+            gridView.smoothScrollToPosition(lastHoldPosition);
+            lastHoldPosition = INVALID_POSITION;
+        }
+    }
 }
