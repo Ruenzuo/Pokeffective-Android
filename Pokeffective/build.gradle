@@ -8,13 +8,27 @@ android {
         minSdkVersion 14
         targetSdkVersion 19
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.1"
+    }
+    signingConfigs {
+        release {
+            keyAlias = 'ruenzuo'
+            keyPassword = 'Jenesaisquoi13'
+            storeFile = file('../.signing/pokeffective.keystore')
+            storePassword = 'Jenesaisquoi13'
+        }
     }
     buildTypes {
         release {
+            zipAlign true
+            debuggable true
+            signingConfig signingConfigs.release
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 
