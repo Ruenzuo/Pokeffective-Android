@@ -14,5 +14,14 @@
         android:layout_height="match_parent"
         android:dividerHeight="16dp"
         android:divider="@android:color/transparent"/>
+    <TextView
+        android:id="@+id/txtViewNoMovesetResults"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@color/light_gray"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="No move added to moveset found. Add one to get started. You can remove them later holding the cells."/>
 
 </RelativeLayout>
