@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.ruenzuo.pokeffective.R;
@@ -89,6 +90,17 @@ public class BoxActivity extends Activity implements OnConfirmListener {
         if (requestCode == POKEMON_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Pokemon pokemon = (Pokemon)data.getExtras().get("Pokemon");
+                SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)gridView.getAdapter();
+                BoxAdapter adapter = (BoxAdapter)listAdapter.getDecoratedBaseAdapter();
+                int count = adapter.getCount();
+                for(int i = 0; i < count; i++) {
+                    Pokemon stored = adapter.get(i);
+                    if (stored.getIdentifier() == pokemon.getIdentifier()) {
+                        Toast toast = Toast.makeText(this, "You can't save the same pokémon twice in your box.", Toast.LENGTH_SHORT);
+                        toast.show();
+                        return;
+                    }
+                }
                 pokemon.save();
                 ArrayList<Pokemon> pokemons = new ArrayList<Pokemon>();
                 pokemons.add(pokemon);
@@ -136,4 +148,5 @@ public class BoxActivity extends Activity implements OnConfirmListener {
             lastHoldPosition = INVALID_POSITION;
         }
     }
+
 }
