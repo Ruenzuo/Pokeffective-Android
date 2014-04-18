@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="action_clear" type="id"/>
+    <item name="action_pokemon_filter_clear" type="id"/>
 </resources>

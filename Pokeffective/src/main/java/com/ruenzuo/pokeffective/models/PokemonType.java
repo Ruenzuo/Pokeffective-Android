@@ -1,9 +1,11 @@
 package com.ruenzuo.pokeffective.models;
 
+import java.io.Serializable;
+
 /**
  * Created by ruenzuo on 16/04/14.
  */
-public enum PokemonType {
+public enum PokemonType implements Serializable {
 
     NONE ("None", 0xff000000), NORMAL ("Normal", 0xffc7c7cc), FIGHTING ("Fighting", 0xfffc880f), FLYING ("Flying", 0xff55dae1),
     POISON ("Poison", 0xffed4694), GROUND ("Ground", 0xfffec418), ROCK ("Rock", 0xffd6cec3), BUG ("Bug", 0xffa5de37),

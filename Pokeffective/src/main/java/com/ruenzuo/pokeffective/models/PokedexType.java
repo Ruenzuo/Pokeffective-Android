@@ -1,10 +1,12 @@
 package com.ruenzuo.pokeffective.models;
 
+import java.io.Serializable;
+
 /**
  * Created by ruenzuo on 16/04/14.
  */
 
-public enum PokedexType {
+public enum PokedexType implements Serializable {
 
     NONE ("None"), NATIONAL ("National"), KANTO ("Kanto"), JHOTO ("Jhoto"), HOENN ("Hoenn"),
     ORIGINAL_SINNOH ("Sinnoh"), EXTENDED_SINNOH ("Extended Sinno"),

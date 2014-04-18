@@ -3,14 +3,11 @@ package com.ruenzuo.pokeffective.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
@@ -52,12 +49,23 @@ public class BoxActivity extends Activity implements OnConfirmListener {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 lastHoldPosition = position;
-                SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)gridView.getAdapter();
-                BoxAdapter adapter = (BoxAdapter)listAdapter.getDecoratedBaseAdapter();
+                SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter) gridView.getAdapter();
+                BoxAdapter adapter = (BoxAdapter) listAdapter.getDecoratedBaseAdapter();
                 Pokemon pokemon = adapter.get(position);
                 ConfirmDialogFragment dialog = ConfirmDialogFragment.newInstance("Remove " + pokemon.getName() + " from box?");
                 dialog.show(getFragmentManager(), "ConfirmDialogFragment");
                 return true;
+            }
+        });
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter) gridView.getAdapter();
+                BoxAdapter adapter = (BoxAdapter) listAdapter.getDecoratedBaseAdapter();
+                Pokemon pokemon = adapter.get(position);
+                Intent intent = new Intent(getApplicationContext(), MovesetListActivity.class);
+                intent.putExtra("Pokemon", pokemon);
+                startActivity(intent);
             }
         });
         Groundy.create(BoxTask.class)
@@ -74,7 +82,7 @@ public class BoxActivity extends Activity implements OnConfirmListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_add) {
+        if (id == R.id.action_box_add) {
             Intent intent = new Intent(getApplicationContext(), PokemonListActivity.class);
             startActivityForResult(intent, POKEMON_REQUEST_CODE);
             return true;

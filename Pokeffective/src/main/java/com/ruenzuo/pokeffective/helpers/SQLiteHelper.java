@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.ruenzuo.pokeffective.models.Move;
+import com.ruenzuo.pokeffective.models.MoveCategory;
+import com.ruenzuo.pokeffective.models.MoveLearnMethod;
 import com.ruenzuo.pokeffective.models.PokedexType;
 import com.ruenzuo.pokeffective.models.Pokemon;
 import com.ruenzuo.pokeffective.models.PokemonType;
@@ -37,6 +40,60 @@ public class SQLiteHelper {
 
     public void close() {
         databaseOpenHelper.close();
+    }
+
+    public ArrayList<Move> getMoves(Pokemon pokemon, MoveCategory category, MoveLearnMethod learnMethod, PokemonType moveType) {
+        ArrayList<Move> moves = new ArrayList<Move>();
+        boolean prevolutionSearch = pokemon.isEvolution() && (learnMethod == MoveLearnMethod.ALL || learnMethod == MoveLearnMethod.EGG);
+        if (prevolutionSearch) {
+            boolean found = false;
+            String prevolutionQuery = null;
+            int prevolutionIdentifier = 0;
+            do {
+                if (prevolutionIdentifier == 0) {
+                    prevolutionQuery = QueryHelper.prevolutionQuery(pokemon.getIdentifier());
+                }
+                else {
+                    prevolutionQuery = QueryHelper.prevolutionQuery(prevolutionIdentifier);
+                }
+                Cursor prevolutionCursor = SQLiteDatabase.rawQuery(prevolutionQuery, null);
+                while (prevolutionCursor.moveToNext()) {
+                    int result = prevolutionCursor.getInt(prevolutionCursor.getColumnIndex("prevolution"));
+                    if (result != 0) {
+                        prevolutionIdentifier = result;
+                    }
+                    else {
+                        found = true;
+                    }
+                }
+            } while (!found);
+            Pokemon stubPokemon = new Pokemon();
+            stubPokemon.setIdentifier(prevolutionIdentifier);
+            String prevolutionMovesQuery = QueryHelper.movesSearchQuery(stubPokemon, moveType, learnMethod, category);
+            Cursor prevolutionMovesCursor = SQLiteDatabase.rawQuery(prevolutionMovesQuery, null);
+            while (prevolutionMovesCursor.moveToNext()) {
+                Move move = TranslatorHelper.translateMove(prevolutionMovesCursor);
+                moves.add(move);
+            }
+        }
+        String movesQuery = QueryHelper.movesSearchQuery(pokemon, moveType, learnMethod, category);
+        Cursor movesCursor = SQLiteDatabase.rawQuery(movesQuery, null);
+        while (movesCursor.moveToNext()) {
+            Move move = TranslatorHelper.translateMove(movesCursor);
+            moves.add(move);
+        }
+        if (prevolutionSearch) {
+            Hashtable movesTable = new Hashtable();
+            for (Move move : moves) {
+                movesTable.put(move.getName(), move);
+            }
+            moves.addAll(movesTable.values());
+            Collections.sort(moves, new MovesComparator());
+            return moves;
+        }
+        else {
+            return moves;
+        }
     }
 
     public ArrayList<Pokemon> getPokemons(PokedexType pokedexType, PokemonType pokemonType) {
@@ -89,7 +146,7 @@ public class SQLiteHelper {
         return pokemons;
     }
 
-    public class PokemonComparator implements Comparator<Pokemon> {
+    private class PokemonComparator implements Comparator<Pokemon> {
 
         @Override
         public int compare(Pokemon o1, Pokemon o2) {
@@ -98,4 +155,11 @@ public class SQLiteHelper {
 
     }
 
+    private class MovesComparator implements Comparator<Move> {
+
+        @Override
+        public int compare(Move o1, Move o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    }
 }

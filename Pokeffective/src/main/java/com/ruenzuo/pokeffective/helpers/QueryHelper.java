@@ -1,6 +1,9 @@
 package com.ruenzuo.pokeffective.helpers;
 
+import com.ruenzuo.pokeffective.models.MoveCategory;
+import com.ruenzuo.pokeffective.models.MoveLearnMethod;
 import com.ruenzuo.pokeffective.models.PokedexType;
+import com.ruenzuo.pokeffective.models.Pokemon;
 import com.ruenzuo.pokeffective.models.PokemonType;
 
 /**
@@ -57,6 +60,41 @@ public class QueryHelper {
         "    on po.id = pt.pokemon_id " +
         "where po.id = " + identifier + " and " +
         "  pt.slot = " + typeSlot;
+    }
+
+    public static String movesSearchQuery(Pokemon pokemon, PokemonType moveType, MoveLearnMethod learnMethod, MoveCategory category) {
+        String query = "select m.identifier as name," +
+        "  m.type_id as type, " +
+        "  mdc.id as category, " +
+        "  m.power, " +
+        "  m.accuracy " +
+        "from " +
+        "  pokemon_moves as pm " +
+        "    join moves as m " +
+        "      on pm.move_id = m.id " +
+        "    join move_damage_classes as mdc " +
+        "      on m.damage_class_id = mdc.id " +
+        "where ";
+        if (learnMethod != MoveLearnMethod.ALL) {
+            query += " pm.pokemon_move_method_id = " + learnMethod.ordinal() + " and ";
+        }
+        if (moveType != PokemonType.NONE) {
+            query += " m.type_id = "+ moveType.ordinal() + " and ";
+        }
+        if (category != MoveCategory.ALL) {
+            query += " m.damage_class_id = " + category.ordinal() + " and ";
+        }
+        query += " pokemon_id = "+ pokemon.getIdentifier() + " " +
+        "group by m.identifier order by m.identifier";
+        return query;
+    }
+
+    public static String prevolutionQuery(int identifier) {
+        return "select ps.evolves_from_species_id as prevolution " +
+        "from pokemon_species as ps " +
+        "  join pokemon as po " +
+        "    on ps.id = po.species_id  " +
+        "where po.id = " + identifier;
     }
 
 }
