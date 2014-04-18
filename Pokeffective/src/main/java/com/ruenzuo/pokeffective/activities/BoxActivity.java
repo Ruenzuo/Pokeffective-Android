@@ -21,6 +21,9 @@ import com.telly.groundy.Groundy;
 import com.telly.groundy.annotations.OnSuccess;
 import com.telly.groundy.annotations.Param;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import java.util.ArrayList;
 
 /**
@@ -71,6 +74,21 @@ public class BoxActivity extends Activity implements OnConfirmListener {
         Groundy.create(BoxTask.class)
                 .callback(this)
                 .queueUsing(this);
+        checkForUpdates();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkForCrashes();
+    }
+
+    private void checkForCrashes() {
+        CrashManager.register(this, "63f2eda0ed13b522abc43ff58f28d179");
+    }
+
+    private void checkForUpdates() {
+        UpdateManager.register(this, "63f2eda0ed13b522abc43ff58f28d179");
     }
 
     @Override
