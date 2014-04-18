@@ -105,6 +105,11 @@ public class BoxActivity extends Activity implements OnConfirmListener {
                 SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)gridView.getAdapter();
                 BoxAdapter adapter = (BoxAdapter)listAdapter.getDecoratedBaseAdapter();
                 int count = adapter.getCount();
+                if (count >= 6) {
+                    Toast toast = Toast.makeText(this, "You can't save more than six pokémon in your box. Remove one first in order to add another or buy unlimited space.", Toast.LENGTH_LONG);
+                    toast.show();
+                    return;
+                }
                 for(int i = 0; i < count; i++) {
                     Pokemon stored = adapter.get(i);
                     if (stored.getIdentifier() == pokemon.getIdentifier()) {

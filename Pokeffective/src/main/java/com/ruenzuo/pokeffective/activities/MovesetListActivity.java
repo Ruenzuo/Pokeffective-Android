@@ -44,6 +44,7 @@ public class MovesetListActivity extends ListActivity implements OnConfirmListen
             SwingBottomInAnimationAdapter swingRightInAnimationAdapter = new SwingBottomInAnimationAdapter(adapter);
             swingRightInAnimationAdapter.setAbsListView(getListView());
             getListView().setAdapter(swingRightInAnimationAdapter);
+            getListView().setEmptyView(findViewById(R.id.txtViewNoMovesetResults));
             getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -90,6 +91,11 @@ public class MovesetListActivity extends ListActivity implements OnConfirmListen
                 SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListView().getAdapter();
                 MovesetAdapter adapter = (MovesetAdapter)listAdapter.getDecoratedBaseAdapter();
                 int count = adapter.getCount();
+                if (count >= 4) {
+                    Toast toast = Toast.makeText(this, "You can't save more than four moves for a pokémon in your box. Remove one first in order to add another.", Toast.LENGTH_LONG);
+                    toast.show();
+                    return;
+                }
                 for(int i = 0; i < count; i++) {
                     Move stored = adapter.get(i);
                     if (stored.getName().equalsIgnoreCase(move.getName())) {
