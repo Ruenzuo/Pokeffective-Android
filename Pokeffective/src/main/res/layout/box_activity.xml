@@ -16,4 +16,13 @@
         android:horizontalSpacing="16dp"
         android:stretchMode="columnWidth"
         android:gravity="center"/>
+    <TextView
+        android:id="@+id/txtViewNoBox"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@color/light_gray"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="No pokémon added to the box found. Add one to get started. You can remove them later holding the cells."/>
 </LinearLayout>

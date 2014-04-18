@@ -3,11 +3,14 @@ package com.ruenzuo.pokeffective.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
@@ -40,6 +43,7 @@ public class BoxActivity extends Activity implements OnConfirmListener {
         setContentView(R.layout.box_activity);
         getActionBar().setTitle("Box");
         gridView = (GridView) findViewById(R.id.gridView);
+        gridView.setEmptyView(findViewById(R.id.txtViewNoBox));
         BoxAdapter adapter = new BoxAdapter(this, R.layout.member_item, new ArrayList<Pokemon>());
         SwingBottomInAnimationAdapter swingRightInAnimationAdapter = new SwingBottomInAnimationAdapter(adapter);
         swingRightInAnimationAdapter.setAbsListView(gridView);

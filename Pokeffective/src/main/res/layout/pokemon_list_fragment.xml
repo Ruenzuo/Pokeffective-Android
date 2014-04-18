@@ -11,5 +11,14 @@
         android:layout_height="match_parent"
         android:dividerHeight="16dp"
         android:divider="@android:color/transparent"/>
+    <TextView
+        android:id="@+id/txtViewNoPokemonResults"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@color/light_gray"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="No results for this filter or search values. Please try others."/>
 
 </LinearLayout>
