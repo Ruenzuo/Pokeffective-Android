@@ -6,6 +6,7 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +24,10 @@ public class Pokemon extends Model implements Cloneable, Serializable {
     private PokemonType firstType;
     @Column(name = "secondType")
     private PokemonType secondType;
+    @Column(name = "moves")
+    private ArrayList<Move> moves;
+    @Column(name = "evolution")
+    private boolean evolution;
 
     public Pokemon(){
         super();
@@ -34,6 +39,8 @@ public class Pokemon extends Model implements Cloneable, Serializable {
         this.pokedexNumber = builder.pokedexNumber;
         this.firstType = builder.firstType;
         this.secondType = builder.secondType;
+        this.moves = builder.moves;
+        this.evolution = builder.evolution;
     }
 
     public int getIdentifier() {
@@ -76,6 +83,26 @@ public class Pokemon extends Model implements Cloneable, Serializable {
         this.secondType = secondType;
     }
 
+    public ArrayList<Move> getMoves() {
+        return moves;
+    }
+
+    public void setMoves(ArrayList<Move> moves) {
+        this.moves = moves;
+    }
+
+    public void addMove(Move move) {
+        moves.add(move);
+    }
+
+    public boolean isEvolution() {
+        return evolution;
+    }
+
+    public void setEvolution(boolean evolution) {
+        this.evolution = evolution;
+    }
+
     public static List<Pokemon> getAll() {
         return new Select().from(Pokemon.class).execute();
     }
@@ -96,6 +123,8 @@ public class Pokemon extends Model implements Cloneable, Serializable {
         private int pokedexNumber;
         private PokemonType firstType;
         private PokemonType secondType;
+        private ArrayList<Move> moves;
+        private boolean evolution;
 
         public PokemonBuilder(int identifier, String name) {
             this.identifier = identifier;
@@ -114,6 +143,16 @@ public class Pokemon extends Model implements Cloneable, Serializable {
 
         public PokemonBuilder secondType(PokemonType secondType) {
             this.secondType = secondType;
+            return this;
+        }
+
+        public PokemonBuilder moves(ArrayList<Move> moves) {
+            this.moves = moves;
+            return this;
+        }
+
+        public PokemonBuilder evolution(boolean evolution) {
+            this.evolution = evolution;
             return this;
         }
 

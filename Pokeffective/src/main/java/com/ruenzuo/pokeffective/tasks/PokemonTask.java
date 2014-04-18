@@ -26,6 +26,7 @@ public class PokemonTask extends GroundyTask {
             return failed();
         }
         ArrayList<Pokemon> pokemons = sqliteHelper.getPokemons(pokedexType, pokemonType);
+        sqliteHelper.close();
         return succeeded().add("Pokemons", pokemons);
     }
 

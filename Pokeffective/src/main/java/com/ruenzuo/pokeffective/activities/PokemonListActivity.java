@@ -79,16 +79,16 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.pokemon_list_menu, menu);
         if (filterActive) {
-            menu.add(Menu.NONE, R.id.action_clear, Menu.NONE, "Clear")
+            menu.add(Menu.NONE, R.id.action_pokemon_filter_clear, Menu.NONE, "Clear")
                     .setIcon(getResources().getDrawable(R.drawable.ic_action_trash))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            clearItem = menu.findItem(R.id.action_clear);
+            clearItem = menu.findItem(R.id.action_pokemon_filter_clear);
         }
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        MenuItem searchItem = menu.findItem(R.id.action_pokemon_search);
         searchItem.setOnActionExpandListener(this);
         SearchView searchView = (SearchView)searchItem.getActionView();
         setupSearchView(searchView);
-        filterItem = menu.findItem(R.id.action_filter);
+        filterItem = menu.findItem(R.id.action_pokemon_filter);
         return true;
     }
 
@@ -99,21 +99,21 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
             finish();
             return true;
         }
-        else if (id == R.id.action_search) {
+        else if (id == R.id.action_pokemon_search) {
             return true;
         }
-        else if (id == R.id.action_filter_pokedex) {
+        else if (id == R.id.action_pokemon_filter_pokedex) {
             FilterOption option = pokedexFilterOption.clone();
             DialogFragment dialog = FilterDialogFragment.newInstance(option);
             dialog.show(getFragmentManager(), "FilterDialogFragment");
             return true;
         }
-        else if (id == R.id.action_filter_pokemon_type) {
+        else if (id == R.id.action_pokemon_filter_type) {
             FilterOption option = pokemonTypeFilterOption.clone();
             DialogFragment dialog = FilterDialogFragment.newInstance(option);
             dialog.show(getFragmentManager(), "FilterDialogFragment");
         }
-        else if (id == R.id.action_clear) {
+        else if (id == R.id.action_pokemon_filter_clear) {
             pokedexFilterOption = FilterOption.defaultPokedexFilterOption();
             pokemonTypeFilterOption = FilterOption.defaultPokemonTypeFilterOption();
             pokemonFilterListener.onPokemonFilterChanged((PokedexType) pokedexFilterOption.getValue(),
