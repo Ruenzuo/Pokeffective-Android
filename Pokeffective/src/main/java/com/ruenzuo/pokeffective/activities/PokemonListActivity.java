@@ -178,6 +178,8 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
             case POKEMON_TYPE:
                 pokemonTypeFilterOption = filterOption;
                 break;
+            default:
+                break;
         }
         pokemonFilterListener.onPokemonFilterChanged((PokedexType) pokedexFilterOption.getValue(),
                 (PokemonType) pokemonTypeFilterOption.getValue());

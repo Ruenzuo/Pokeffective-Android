@@ -50,6 +50,18 @@ public class FilterOption implements Serializable, Cloneable {
         return new FilterOptionBuilder("Filtering by pokémon type", FilterType.POKEMON_TYPE).value(PokemonType.NONE).build();
     }
 
+    public static FilterOption defaultMoveCategoryFilterOption() {
+        return new FilterOptionBuilder("Filtering by move category", FilterType.MOVE_CATEGORY).value(MoveCategory.ALL).build();
+    }
+
+    public static FilterOption defaultMoveLearnMethodFilterOption() {
+        return new FilterOptionBuilder("Filtering by move learn method", FilterType.MOVE_LEARN_METHOD).value(MoveLearnMethod.ALL).build();
+    }
+
+    public static FilterOption defaultMoveTypeFilterOption() {
+        return new FilterOptionBuilder("Filtering by move type", FilterType.MOVE_TYPE).value(PokemonType.NONE).build();
+    }
+
     public FilterOption clone() {
         try {
             return (FilterOption) super.clone();
