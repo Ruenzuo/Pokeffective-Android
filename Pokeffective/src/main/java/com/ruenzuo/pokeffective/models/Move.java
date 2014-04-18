@@ -1,5 +1,6 @@
 package com.ruenzuo.pokeffective.models;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
@@ -9,7 +10,7 @@ import java.io.Serializable;
  * Created by ruenzuo on 18/04/14.
  */
 @Table(name = "Move")
-public class Move implements Cloneable, Serializable {
+public class Move extends Model implements Cloneable, Serializable {
 
     @Column(name = "name")
     private String name;
@@ -21,6 +22,8 @@ public class Move implements Cloneable, Serializable {
     private int power;
     @Column(name = "accuracy")
     private int accuracy;
+    @Column(name = "Pokemon", onDelete = Column.ForeignKeyAction.SET_NULL)
+    private Pokemon pokemon;
 
     public Move(){
         super();
@@ -72,6 +75,14 @@ public class Move implements Cloneable, Serializable {
 
     public void setAccuracy(int accuracy) {
         this.accuracy = accuracy;
+    }
+
+    public Pokemon getPokemon() {
+        return pokemon;
+    }
+
+    public void setPokemon(Pokemon pokemon) {
+        this.pokemon = pokemon;
     }
 
     public Move clone() {

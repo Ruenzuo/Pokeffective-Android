@@ -1,39 +1,63 @@
 package com.ruenzuo.pokeffective.activities;
 
-import android.app.Activity;
-import android.app.FragmentTransaction;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
+import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.ruenzuo.pokeffective.R;
-import com.ruenzuo.pokeffective.fragments.MovesetListFragment;
+import com.ruenzuo.pokeffective.adapters.MovesetAdapter;
+import com.ruenzuo.pokeffective.definitions.OnConfirmListener;
+import com.ruenzuo.pokeffective.fragments.ConfirmDialogFragment;
+import com.ruenzuo.pokeffective.models.Move;
 import com.ruenzuo.pokeffective.models.Pokemon;
+
+import java.util.ArrayList;
 
 /**
  * Created by ruenzuo on 18/04/14.
  */
-public class MovesetListActivity extends Activity {
+public class MovesetListActivity extends ListActivity implements OnConfirmListener {
 
     private static final int MOVE_REQUEST_CODE = 1;
+    private static final int INVALID_POSITION = -1;
+    private int lastHoldPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lastHoldPosition = INVALID_POSITION;
         setContentView(R.layout.moveset_list_activity);
         getActionBar().setIcon(getResources().getDrawable(R.drawable.ic_action_back));
         getActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             Pokemon pokemon = (Pokemon) extras.getSerializable("Pokemon");
+            Pokemon stored = Pokemon.getStored(pokemon);
             getActionBar().setTitle(pokemon.getName());
-            MovesetListFragment fragment = MovesetListFragment.newInstance(pokemon);
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.movesetListFragmentPlaceholder, fragment);
-            transaction.commit();
+            MovesetAdapter adapter = new MovesetAdapter(this, R.layout.move_row, new ArrayList<Move>(stored.moves()));
+            SwingBottomInAnimationAdapter swingRightInAnimationAdapter = new SwingBottomInAnimationAdapter(adapter);
+            swingRightInAnimationAdapter.setAbsListView(getListView());
+            getListView().setAdapter(swingRightInAnimationAdapter);
+            getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    lastHoldPosition = position;
+                    SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter) getListView().getAdapter();
+                    MovesetAdapter adapter = (MovesetAdapter) listAdapter.getDecoratedBaseAdapter();
+                    Pokemon pokemon = (Pokemon) getIntent().getExtras().getSerializable("Pokemon");
+                    Move move = adapter.get(position);
+                    ConfirmDialogFragment dialog = ConfirmDialogFragment.newInstance("Remove " + move.getName() + " from " + pokemon.getName()  + "?");
+                    dialog.show(getFragmentManager(), "ConfirmDialogFragment");
+                    return true;
+                }
+            });
         }
-
     }
 
     @Override
@@ -55,6 +79,69 @@ public class MovesetListActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MOVE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Move move = (Move)data.getExtras().get("Move");
+                SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListView().getAdapter();
+                MovesetAdapter adapter = (MovesetAdapter)listAdapter.getDecoratedBaseAdapter();
+                int count = adapter.getCount();
+                for(int i = 0; i < count; i++) {
+                    Move stored = adapter.get(i);
+                    if (stored.getName().equalsIgnoreCase(move.getName())) {
+                        Toast toast = Toast.makeText(this, "You can't save the same move twice for a pókemon in your box.", Toast.LENGTH_SHORT);
+                        toast.show();
+                        return;
+                    }
+                }
+                Pokemon pokemon = (Pokemon) getIntent().getExtras().getSerializable("Pokemon");
+                Pokemon stored = Pokemon.getStored(pokemon);
+                move.setPokemon(stored);
+                move.save();
+                ArrayList<Move> moves = new ArrayList<Move>();
+                moves.add(move);
+                addToAdapter(moves, false);
+            }
+        }
+    }
+
+    private void addToAdapter(ArrayList<Move> moves, boolean shouldClear) {
+        SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListView().getAdapter();
+        MovesetAdapter adapter = (MovesetAdapter)listAdapter.getDecoratedBaseAdapter();
+        if (shouldClear) {
+            adapter.clear();
+            listAdapter.setShouldAnimateFromPosition(0);
+        }
+        else {
+            listAdapter.setShouldAnimateFromPosition(adapter.getCount());
+        }
+        adapter.addAll(moves);
+        adapter.notifyDataSetChanged();
+        if (shouldClear) {
+            getListView().setSelection(0);
+        }
+        else {
+            getListView().smoothScrollToPosition(adapter.getCount());
+        }
+    }
+
+    @Override
+    public void onConfirm(boolean confirmed) {
+        if (confirmed && lastHoldPosition != INVALID_POSITION) {
+            SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter) getListView().getAdapter();
+            MovesetAdapter adapter = (MovesetAdapter)listAdapter.getDecoratedBaseAdapter();
+            Move move = adapter.get(lastHoldPosition);
+            move.delete();
+            adapter.remove(lastHoldPosition);
+            listAdapter.setShouldAnimateFromPosition(lastHoldPosition);
+            adapter.notifyDataSetChanged();
+            getListView().smoothScrollToPosition(lastHoldPosition);
+            lastHoldPosition = INVALID_POSITION;
+        }
     }
 
 }

@@ -21,8 +21,7 @@ public class TranslatorHelper {
         Pokemon.PokemonBuilder builder = new Pokemon.PokemonBuilder(cursor.getInt(cursor.getColumnIndex("identifier")),
                 StringUtils.capitalize(cursor.getString(cursor.getColumnIndex("name"))))
                 .pokedexNumber(cursor.getInt(cursor.getColumnIndex("number")))
-                .firstType(PokemonType.values()[cursor.getInt(cursor.getColumnIndex("type"))])
-                .moves(new ArrayList<Move>());
+                .firstType(PokemonType.values()[cursor.getInt(cursor.getColumnIndex("type"))]);
         if (cursor.getInt(cursor.getColumnIndex("evolves"))!= 0) {
             builder.evolution(true);
         }
@@ -42,6 +41,5 @@ public class TranslatorHelper {
                 .accuracy(cursor.getInt(cursor.getColumnIndex("accuracy")))
                 .build();
     }
-
 
 }
