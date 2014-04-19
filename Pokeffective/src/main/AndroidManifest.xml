@@ -38,6 +38,9 @@
         <activity android:name=".activities.MoveListActivity"
             android:label="Moves"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activities.PartyActivity"
+            android:label="Party"
+            android:screenOrientation="portrait"/>
         <activity android:name="net.hockeyapp.android.UpdateActivity" />
         <meta-data android:name="AA_DB_NAME" android:value="Pokeffective.db" />
         <meta-data android:name="AA_DB_VERSION" android:value="1" />
