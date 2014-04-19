@@ -30,7 +30,7 @@ import java.util.ArrayList;
 /**
  * Created by ruenzuo on 17/04/14.
  */
-public class BoxActivity extends BaseActivity implements OnConfirmListener {
+public class BoxActivity extends Activity implements OnConfirmListener {
 
     private GridView gridView;
     private static final int POKEMON_REQUEST_CODE = 1;
