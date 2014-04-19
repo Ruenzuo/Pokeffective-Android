@@ -5,14 +5,18 @@
     <item android:id="@+id/action_info"
         android:title="@string/action_info"
         android:icon="@drawable/ic_action_action_about"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="always"/>
+    <item android:id="@+id/action_box_restore"
+        android:title="@string/action_restore"
+        android:icon="@drawable/ic_action_shop"
+        android:showAsAction="always"/>
     <item android:id="@+id/action_balance"
         android:title="@string/action_balance"
         android:icon="@drawable/ic_action_measure"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="always"/>
     <item android:id="@+id/action_box_add"
         android:title="@string/action_add"
         android:icon="@drawable/ic_action_content_new"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="always"/>
 
 </menu>
