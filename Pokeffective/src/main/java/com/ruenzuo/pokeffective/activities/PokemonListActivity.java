@@ -1,18 +1,17 @@
 package com.ruenzuo.pokeffective.activities;
 
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.ruenzuo.pokeffective.base.BaseActivity;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.definitions.OnFilterOptionChangedListener;
 import com.ruenzuo.pokeffective.definitions.OnPokemonFilterChangedListener;
@@ -25,7 +24,7 @@ import com.ruenzuo.pokeffective.models.PokedexType;
 import com.ruenzuo.pokeffective.models.Pokemon;
 import com.ruenzuo.pokeffective.models.PokemonType;
 
-public class PokemonListActivity extends Activity implements OnPokemonSelectedListener, SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener, OnFilterOptionChangedListener {
+public class PokemonListActivity extends BaseActivity implements OnPokemonSelectedListener, SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener, OnFilterOptionChangedListener {
 
     private OnPokemonListSearchListener listSearchListener;
     private OnPokemonFilterChangedListener pokemonFilterListener;

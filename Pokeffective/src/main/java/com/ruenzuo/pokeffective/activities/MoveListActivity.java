@@ -14,6 +14,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.ruenzuo.pokeffective.R;
+import com.ruenzuo.pokeffective.base.BaseActivity;
 import com.ruenzuo.pokeffective.definitions.OnFilterOptionChangedListener;
 import com.ruenzuo.pokeffective.definitions.OnMoveFilterChangedListener;
 import com.ruenzuo.pokeffective.definitions.OnMoveListSearchListener;
@@ -31,7 +32,7 @@ import com.ruenzuo.pokeffective.models.PokemonType;
 /**
  * Created by ruenzuo on 18/04/14.
  */
-public class MoveListActivity extends Activity implements OnMoveSelectedListener, MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener, OnFilterOptionChangedListener {
+public class MoveListActivity extends BaseActivity implements OnMoveSelectedListener, MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener, OnFilterOptionChangedListener {
 
     private OnMoveListSearchListener listSearchListener;
     private OnMoveFilterChangedListener moveFilterListener;

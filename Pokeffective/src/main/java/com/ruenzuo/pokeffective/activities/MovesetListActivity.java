@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.adapters.MovesetAdapter;
+import com.ruenzuo.pokeffective.base.BaseListActivity;
 import com.ruenzuo.pokeffective.definitions.OnConfirmListener;
 import com.ruenzuo.pokeffective.fragments.ConfirmDialogFragment;
 import com.ruenzuo.pokeffective.models.Move;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by ruenzuo on 18/04/14.
  */
-public class MovesetListActivity extends ListActivity implements OnConfirmListener {
+public class MovesetListActivity extends BaseListActivity implements OnConfirmListener {
 
     private static final int MOVE_REQUEST_CODE = 1;
     private static final int INVALID_POSITION = -1;
