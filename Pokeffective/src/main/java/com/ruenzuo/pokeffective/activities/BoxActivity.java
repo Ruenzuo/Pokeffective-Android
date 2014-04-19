@@ -1,6 +1,7 @@
 package com.ruenzuo.pokeffective.activities;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,6 +17,7 @@ import com.ruenzuo.pokeffective.adapters.BoxAdapter;
 import com.ruenzuo.pokeffective.base.BaseActivity;
 import com.ruenzuo.pokeffective.definitions.OnConfirmListener;
 import com.ruenzuo.pokeffective.fragments.ConfirmDialogFragment;
+import com.ruenzuo.pokeffective.fragments.InfoDialogFragment;
 import com.ruenzuo.pokeffective.models.Pokemon;
 import com.ruenzuo.pokeffective.tasks.BoxTask;
 import com.telly.groundy.Groundy;
@@ -70,7 +72,6 @@ public class BoxActivity extends Activity implements OnConfirmListener {
                 Intent intent = new Intent(getApplicationContext(), MovesetListActivity.class);
                 intent.putExtra("Pokemon", pokemon);
                 startActivity(intent);
-                overridePendingTransition(R.anim.activity_open_translate, R.anim.activity_close_scale);
             }
         });
         Groundy.create(BoxTask.class)
@@ -111,6 +112,8 @@ public class BoxActivity extends Activity implements OnConfirmListener {
             return true;
         }
         else if (id == R.id.action_info) {
+            DialogFragment dialog = new InfoDialogFragment();
+            dialog.show(getFragmentManager(), "InfoDialogFragment");
             return true;
         }
         return super.onOptionsItemSelected(item);
