@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.adapters.BoxAdapter;
+import com.ruenzuo.pokeffective.base.BaseActivity;
 import com.ruenzuo.pokeffective.definitions.OnConfirmListener;
 import com.ruenzuo.pokeffective.fragments.ConfirmDialogFragment;
 import com.ruenzuo.pokeffective.models.Pokemon;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 /**
  * Created by ruenzuo on 17/04/14.
  */
-public class BoxActivity extends Activity implements OnConfirmListener {
+public class BoxActivity extends BaseActivity implements OnConfirmListener {
 
     private GridView gridView;
     private static final int POKEMON_REQUEST_CODE = 1;
@@ -69,6 +70,7 @@ public class BoxActivity extends Activity implements OnConfirmListener {
                 Intent intent = new Intent(getApplicationContext(), MovesetListActivity.class);
                 intent.putExtra("Pokemon", pokemon);
                 startActivity(intent);
+                overridePendingTransition(R.anim.activity_open_translate, R.anim.activity_close_scale);
             }
         });
         Groundy.create(BoxTask.class)
