@@ -87,6 +87,7 @@ public class SQLiteHelper {
             for (Move move : moves) {
                 movesTable.put(move.getName(), move);
             }
+            moves.clear();
             moves.addAll(movesTable.values());
             Collections.sort(moves, new MovesComparator());
             return moves;

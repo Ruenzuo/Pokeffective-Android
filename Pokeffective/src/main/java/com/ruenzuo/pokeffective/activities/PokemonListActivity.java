@@ -44,6 +44,7 @@ public class PokemonListActivity extends Activity implements OnPokemonSelectedLi
         setContentView(R.layout.pokemon_list_activity);
         getActionBar().setIcon(getResources().getDrawable(R.drawable.ic_action_back));
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle("Pokémon");
         PokemonListFragment fragment = (PokemonListFragment) getFragmentManager().findFragmentById(R.id.pokemonListFragment);
         setListSearchListener(fragment);
         setPokemonFilterListener(fragment);
