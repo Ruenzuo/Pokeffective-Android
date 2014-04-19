@@ -109,6 +109,14 @@ public class BoxActivity extends Activity implements OnConfirmListener {
             return true;
         }
         else if (id == R.id.action_balance) {
+            if (isBoxValid()) {
+                Intent intent = new Intent(getApplicationContext(), PartyActivity.class);
+                startActivity(intent);
+            }
+            else {
+                Toast toast = Toast.makeText(this, "You need at least three pókemon with four moves each one in your box to analyze a party.", Toast.LENGTH_LONG);
+                toast.show();
+            }
             return true;
         }
         else if (id == R.id.action_info) {
@@ -117,6 +125,19 @@ public class BoxActivity extends Activity implements OnConfirmListener {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isBoxValid() {
+        SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)gridView.getAdapter();
+        BoxAdapter adapter = (BoxAdapter)listAdapter.getDecoratedBaseAdapter();
+        int validPKMN = 0;
+        for (int i = 0; i < adapter.getCount(); i++) {
+            Pokemon pokemon = adapter.get(i);
+            if (pokemon.moves().size() >= 4) {
+                validPKMN++;
+            }
+        }
+        return validPKMN >= 3;
     }
 
     @Override
