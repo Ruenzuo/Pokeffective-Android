@@ -1,6 +1,5 @@
 package com.ruenzuo.pokeffective.activities;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,8 +12,8 @@ import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAni
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.adapters.MovesetAdapter;
 import com.ruenzuo.pokeffective.base.BaseListActivity;
-import com.ruenzuo.pokeffective.definitions.OnConfirmListener;
-import com.ruenzuo.pokeffective.fragments.ConfirmDialogFragment;
+import com.ruenzuo.pokeffective.definitions.OnChoiceSelectedListener;
+import com.ruenzuo.pokeffective.fragments.ChoiceDialogFragment;
 import com.ruenzuo.pokeffective.models.Move;
 import com.ruenzuo.pokeffective.models.Pokemon;
 
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Created by ruenzuo on 18/04/14.
  */
-public class MovesetListActivity extends BaseListActivity implements OnConfirmListener {
+public class MovesetListActivity extends BaseListActivity implements OnChoiceSelectedListener {
 
     private static final int MOVE_REQUEST_CODE = 1;
     private static final int INVALID_POSITION = -1;
@@ -54,8 +53,9 @@ public class MovesetListActivity extends BaseListActivity implements OnConfirmLi
                     MovesetAdapter adapter = (MovesetAdapter) listAdapter.getDecoratedBaseAdapter();
                     Pokemon pokemon = (Pokemon) getIntent().getExtras().getSerializable("Pokemon");
                     Move move = adapter.get(position);
-                    ConfirmDialogFragment dialog = ConfirmDialogFragment.newInstance("Remove " + move.getName() + " from " + pokemon.getName()  + "?");
-                    dialog.show(getFragmentManager(), "ConfirmDialogFragment");
+                    String[] choices = {"OK", "Cancel"};
+                    ChoiceDialogFragment dialog = ChoiceDialogFragment.newInstance("Confirm", "Remove " + move.getName() + " from " + pokemon.getName() + "?", choices);
+                    dialog.show(getFragmentManager(), "ChoiceDialogFragment");
                     return true;
                 }
             });
@@ -137,8 +137,8 @@ public class MovesetListActivity extends BaseListActivity implements OnConfirmLi
     }
 
     @Override
-    public void onConfirm(boolean confirmed) {
-        if (confirmed && lastHoldPosition != INVALID_POSITION) {
+    public void onChoiceSelected(boolean selected) {
+        if (selected && lastHoldPosition != INVALID_POSITION) {
             SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter) getListView().getAdapter();
             MovesetAdapter adapter = (MovesetAdapter)listAdapter.getDecoratedBaseAdapter();
             Move move = adapter.get(lastHoldPosition);

@@ -97,4 +97,11 @@ public class QueryHelper {
         "where po.id = " + identifier;
     }
 
+    public static String efficacyQuery() {
+        return "select damage_type_id as damager, " +
+        " target_type_id as target, " +
+        " damage_factor as factor " +
+        "from type_efficacy ";
+    }
+
 }

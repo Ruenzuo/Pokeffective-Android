@@ -14,9 +14,8 @@ import android.widget.Toast;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.adapters.BoxAdapter;
-import com.ruenzuo.pokeffective.base.BaseActivity;
-import com.ruenzuo.pokeffective.definitions.OnConfirmListener;
-import com.ruenzuo.pokeffective.fragments.ConfirmDialogFragment;
+import com.ruenzuo.pokeffective.definitions.OnChoiceSelectedListener;
+import com.ruenzuo.pokeffective.fragments.ChoiceDialogFragment;
 import com.ruenzuo.pokeffective.fragments.InfoDialogFragment;
 import com.ruenzuo.pokeffective.models.Pokemon;
 import com.ruenzuo.pokeffective.tasks.BoxTask;
@@ -32,7 +31,7 @@ import java.util.ArrayList;
 /**
  * Created by ruenzuo on 17/04/14.
  */
-public class BoxActivity extends Activity implements OnConfirmListener {
+public class BoxActivity extends Activity implements OnChoiceSelectedListener {
 
     private GridView gridView;
     private static final int POKEMON_REQUEST_CODE = 1;
@@ -58,8 +57,9 @@ public class BoxActivity extends Activity implements OnConfirmListener {
                 SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter) gridView.getAdapter();
                 BoxAdapter adapter = (BoxAdapter) listAdapter.getDecoratedBaseAdapter();
                 Pokemon pokemon = adapter.get(position);
-                ConfirmDialogFragment dialog = ConfirmDialogFragment.newInstance("Remove " + pokemon.getName() + " from box?");
-                dialog.show(getFragmentManager(), "ConfirmDialogFragment");
+                String[] choices = {"OK", "Cancel"};
+                ChoiceDialogFragment dialog = ChoiceDialogFragment.newInstance("Confirm", "Remove " + pokemon.getName() + " from box?", choices);
+                dialog.show(getFragmentManager(), "ChoiceDialogFragment");
                 return true;
             }
         });
@@ -196,8 +196,8 @@ public class BoxActivity extends Activity implements OnConfirmListener {
     }
 
     @Override
-    public void onConfirm(boolean confirmed) {
-        if (confirmed && lastHoldPosition != INVALID_POSITION) {
+    public void onChoiceSelected(boolean selected) {
+        if (selected && lastHoldPosition != INVALID_POSITION) {
             SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)gridView.getAdapter();
             BoxAdapter adapter = (BoxAdapter)listAdapter.getDecoratedBaseAdapter();
             Pokemon pokemon = adapter.get(lastHoldPosition);
