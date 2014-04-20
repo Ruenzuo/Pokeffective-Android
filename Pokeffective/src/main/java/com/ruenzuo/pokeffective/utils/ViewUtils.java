@@ -12,7 +12,7 @@ import com.ruenzuo.pokeffective.models.PokemonType;
  */
 public class ViewUtils {
 
-    public static Drawable getBackground(PokemonType firstType, PokemonType secondType) {
+    public static Drawable getBackground(PokemonType firstType, PokemonType secondType, boolean isSelected) {
         StateListDrawable states = new StateListDrawable();
         if (secondType != null) {
             int colors[] = new int[2];
@@ -25,9 +25,16 @@ public class ViewUtils {
             shapeUnselected.setCornerRadius(10 * Resources.getSystem().getDisplayMetrics().density);
             GradientDrawable shapeSelected = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, darkerColors);
             shapeSelected.setCornerRadius(10 * Resources.getSystem().getDisplayMetrics().density);
-            states.addState(new int[] {android.R.attr.state_pressed}, shapeSelected);
-            states.addState(new int[] {android.R.attr.state_focused}, shapeSelected);
-            states.addState(new int[] { }, shapeUnselected);
+            if (isSelected) {
+                states.addState(new int[] {android.R.attr.state_pressed}, shapeUnselected);
+                states.addState(new int[] {android.R.attr.state_focused}, shapeSelected);
+                states.addState(new int[] { }, shapeSelected);
+            }
+            else {
+                states.addState(new int[] {android.R.attr.state_pressed}, shapeSelected);
+                states.addState(new int[] {android.R.attr.state_focused}, shapeSelected);
+                states.addState(new int[] { }, shapeUnselected);
+            }
         }
         else {
             GradientDrawable shapeUnselected = new GradientDrawable();
@@ -36,9 +43,16 @@ public class ViewUtils {
             GradientDrawable shapeSelected = new GradientDrawable();
             shapeSelected.setColor(ColorUtils.darkerColor(firstType.toColor()));
             shapeSelected.setCornerRadius(10 * Resources.getSystem().getDisplayMetrics().density);
-            states.addState(new int[] {android.R.attr.state_pressed}, shapeSelected);
-            states.addState(new int[] {android.R.attr.state_focused}, shapeSelected);
-            states.addState(new int[] { }, shapeUnselected);
+            if (isSelected) {
+                states.addState(new int[] {android.R.attr.state_pressed}, shapeUnselected);
+                states.addState(new int[] {android.R.attr.state_focused}, shapeSelected);
+                states.addState(new int[] { }, shapeSelected);
+            }
+            else {
+                states.addState(new int[] {android.R.attr.state_pressed}, shapeSelected);
+                states.addState(new int[] {android.R.attr.state_focused}, shapeSelected);
+                states.addState(new int[] { }, shapeUnselected);
+            }
         }
         return states;
     }

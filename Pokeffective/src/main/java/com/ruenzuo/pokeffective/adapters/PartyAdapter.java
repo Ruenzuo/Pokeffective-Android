@@ -50,7 +50,7 @@ public class PartyAdapter extends ArrayAdapter<Pokemon> {
         int resourceId = context.getResources().getIdentifier(resourceName, "drawable", context.getPackageName());
         Drawable drawable = context.getResources().getDrawable(resourceId);
         imgViewPokemonPicture.setImageDrawable(drawable);
-        convertView.setBackground(ViewUtils.getBackground(pokemon.getFirstType(), pokemon.getSecondType()));
+        convertView.setBackground(ViewUtils.getBackground(pokemon.getFirstType(), pokemon.getSecondType(), pokemon.isSelected()));
         return convertView;
     }
 
