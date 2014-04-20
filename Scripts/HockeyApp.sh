@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Executing Gradle wrapper
-gradle clean build
+./gradlew clean build
 # Creating build number
 DIR='./'
 count=`git rev-list HEAD | wc -l | sed -e 's/ *//g' | xargs -n1 printf %04d`
