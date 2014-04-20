@@ -72,7 +72,7 @@ public class PokemonListActivity extends BaseActivity implements OnPokemonSelect
         Intent returnIntent = new Intent();
         returnIntent.putExtra("Pokemon", pokemon);
         setResult(RESULT_OK, returnIntent);
-        finish();
+        finishAnimated();
     }
 
     @Override
@@ -97,7 +97,7 @@ public class PokemonListActivity extends BaseActivity implements OnPokemonSelect
         int id = item.getItemId();
         if (id == android.R.id.home) {
             setResult(RESULT_CANCELED, null);
-            finish();
+            finishAnimated();
             return true;
         }
         else if (id == R.id.action_pokemon_search) {

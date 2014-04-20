@@ -105,7 +105,7 @@ public class MoveListActivity extends BaseActivity implements OnMoveSelectedList
         int id = item.getItemId();
         if (id == android.R.id.home) {
             setResult(RESULT_CANCELED, null);
-            finish();
+            finishAnimated();
             return true;
         }
         else if (id == R.id.action_move_search) {
@@ -153,7 +153,7 @@ public class MoveListActivity extends BaseActivity implements OnMoveSelectedList
         Intent returnIntent = new Intent();
         returnIntent.putExtra("Move", move);
         setResult(RESULT_OK, returnIntent);
-        finish();
+        finishAnimated();
     }
 
     @Override

@@ -16,10 +16,13 @@ public class BaseActivity extends Activity {
         overridePendingTransition(R.anim.activity_open_translate, R.anim.activity_close_scale);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
+    protected void finishAnimated() {
+        finish();
         overridePendingTransition(R.anim.activity_open_scale, R.anim.activity_close_translate);
     }
 
+    @Override
+    public void onBackPressed() {
+        finishAnimated();
+    }
 }

@@ -72,7 +72,7 @@ public class MovesetListActivity extends BaseListActivity implements OnConfirmLi
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            finish();
+            finishAnimated();
             return true;
         } else if (id == R.id.action_moveset_add) {
             Intent intent = new Intent(getApplicationContext(), MoveListActivity.class);
