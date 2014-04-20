@@ -5,11 +5,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.models.Effective;
+import com.ruenzuo.pokeffective.models.SelectionType;
 import com.ruenzuo.pokeffective.utils.ViewUtils;
 
 import java.util.ArrayList;
@@ -39,7 +41,15 @@ public class EffectiveAdapter extends ArrayAdapter<Effective> {
         txtViewEffectiveType.setText(effective.getPokemonType().toString());
         TextView txtViewEffectiveValue = (TextView) convertView.findViewById(R.id.txtViewEffectiveValue);
         txtViewEffectiveValue.setText(effective.getEffectiveness().toString());
-        convertView.setBackground(ViewUtils.getBackground(effective.getPokemonType(), null, false));
+        ImageView imgViewDisclosure = (ImageView) convertView.findViewById(R.id.imgViewDisclosure);
+        if (effective.getSTABs().size() >= 1) {
+            imgViewDisclosure.setVisibility(View.VISIBLE);
+            convertView.setBackground(ViewUtils.getBackground(effective.getPokemonType(), null, SelectionType.UNSELECTED));
+        }
+        else {
+            imgViewDisclosure.setVisibility(View.GONE);
+            convertView.setBackground(ViewUtils.getBackground(effective.getPokemonType(), null, SelectionType.NO_INTERACTION));
+        }
         return convertView;
     }
 

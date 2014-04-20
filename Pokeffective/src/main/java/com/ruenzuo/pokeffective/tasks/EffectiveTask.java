@@ -58,10 +58,10 @@ public class EffectiveTask extends GroundyTask {
                 }
             }
             Effective.EffectiveBuilder builder = new Effective.EffectiveBuilder(pokemonTypeTarget, effectiveness);
-            if (analysisType == AnalysisType.ATTACK) {
-                builder.STABs(STABs).build();
+            if (analysisType == AnalysisType.DEFENSE) {
+                STABs.clear();
             }
-            Effective effective = builder.build();
+            Effective effective = builder.STABs(STABs).build();
             pokeffective.add(effective);
         }
         return succeeded().add("Pokeffective", pokeffective);

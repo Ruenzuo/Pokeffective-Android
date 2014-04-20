@@ -6,13 +6,14 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 
 import com.ruenzuo.pokeffective.models.PokemonType;
+import com.ruenzuo.pokeffective.models.SelectionType;
 
 /**
  * Created by ruenzuo on 17/04/14.
  */
 public class ViewUtils {
 
-    public static Drawable getBackground(PokemonType firstType, PokemonType secondType, boolean isSelected) {
+    public static Drawable getBackground(PokemonType firstType, PokemonType secondType, SelectionType selectionType) {
         StateListDrawable states = new StateListDrawable();
         if (secondType != null) {
             int colors[] = new int[2];
@@ -25,14 +26,17 @@ public class ViewUtils {
             shapeUnselected.setCornerRadius(10 * Resources.getSystem().getDisplayMetrics().density);
             GradientDrawable shapeSelected = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, darkerColors);
             shapeSelected.setCornerRadius(10 * Resources.getSystem().getDisplayMetrics().density);
-            if (isSelected) {
+            if (selectionType == SelectionType.SELECTED) {
                 states.addState(new int[] {android.R.attr.state_pressed}, shapeUnselected);
                 states.addState(new int[] {android.R.attr.state_focused}, shapeSelected);
                 states.addState(new int[] { }, shapeSelected);
             }
-            else {
+            else if (selectionType == SelectionType.UNSELECTED) {
                 states.addState(new int[] {android.R.attr.state_pressed}, shapeSelected);
                 states.addState(new int[] {android.R.attr.state_focused}, shapeSelected);
+                states.addState(new int[] { }, shapeUnselected);
+            }
+            else if (selectionType == SelectionType.NO_INTERACTION) {
                 states.addState(new int[] { }, shapeUnselected);
             }
         }
@@ -43,14 +47,17 @@ public class ViewUtils {
             GradientDrawable shapeSelected = new GradientDrawable();
             shapeSelected.setColor(ColorUtils.darkerColor(firstType.toColor()));
             shapeSelected.setCornerRadius(10 * Resources.getSystem().getDisplayMetrics().density);
-            if (isSelected) {
+            if (selectionType == SelectionType.SELECTED) {
                 states.addState(new int[] {android.R.attr.state_pressed}, shapeUnselected);
                 states.addState(new int[] {android.R.attr.state_focused}, shapeSelected);
                 states.addState(new int[] { }, shapeSelected);
             }
-            else {
+            else if (selectionType == SelectionType.UNSELECTED) {
                 states.addState(new int[] {android.R.attr.state_pressed}, shapeSelected);
                 states.addState(new int[] {android.R.attr.state_focused}, shapeSelected);
+                states.addState(new int[] { }, shapeUnselected);
+            }
+            else if (selectionType == SelectionType.NO_INTERACTION) {
                 states.addState(new int[] { }, shapeUnselected);
             }
         }

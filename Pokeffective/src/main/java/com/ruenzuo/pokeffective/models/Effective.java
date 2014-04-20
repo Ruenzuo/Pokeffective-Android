@@ -37,6 +37,10 @@ public class Effective {
         STABs.add(anSTAB);
     }
 
+    public ArrayList<STAB> getSTABs() {
+        return STABs;
+    }
+
     public static class EffectiveBuilder {
 
         private final PokemonType pokemonType;
