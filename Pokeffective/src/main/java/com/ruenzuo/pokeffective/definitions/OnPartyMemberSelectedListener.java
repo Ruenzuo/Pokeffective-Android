@@ -7,6 +7,7 @@ import com.ruenzuo.pokeffective.models.Pokemon;
  */
 public interface OnPartyMemberSelectedListener {
 
+    public boolean shouldAllowSelection(Pokemon pokemon);
     public void onPartyMemberSelected(Pokemon member);
 
 }
