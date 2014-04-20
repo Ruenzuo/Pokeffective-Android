@@ -55,7 +55,11 @@ public class PartyListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Pokemon pokemon = (Pokemon)getListAdapter().getItem(position);
+        pokemon.setSelected(!pokemon.isSelected());
         listener.onPartyMemberSelected(pokemon);
+        SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+        PartyAdapter adapter = (PartyAdapter)listAdapter.getDecoratedBaseAdapter();
+        adapter.notifyDataSetChanged();
     }
 
     @Override

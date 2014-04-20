@@ -57,7 +57,7 @@ public class MoveAdapter extends ArrayAdapter<Move> implements Filterable {
         txtViewMovePower.setText("Pwr: " + move.getPower());
         TextView txtViewMoveAccuracy = (TextView) convertView.findViewById(R.id.txtViewMoveAccuracy);
         txtViewMoveAccuracy.setText("Acc: " + move.getAccuracy() + "%");
-        convertView.setBackground(ViewUtils.getBackground(move.getPokemonType(), null));
+        convertView.setBackground(ViewUtils.getBackground(move.getPokemonType(), null, false));
         return convertView;
     }
 

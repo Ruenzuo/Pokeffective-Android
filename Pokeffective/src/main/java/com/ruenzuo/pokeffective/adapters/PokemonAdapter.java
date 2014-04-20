@@ -71,7 +71,7 @@ public class PokemonAdapter extends ArrayAdapter<Pokemon> implements Filterable 
         int resourceId = context.getResources().getIdentifier(resourceName, "drawable", context.getPackageName());
         Drawable drawable = context.getResources().getDrawable(resourceId);
         imgViewPokemonPicture.setImageDrawable(drawable);
-        convertView.setBackground(ViewUtils.getBackground(pokemon.getFirstType(), pokemon.getSecondType()));
+        convertView.setBackground(ViewUtils.getBackground(pokemon.getFirstType(), pokemon.getSecondType(), false));
         return convertView;
     }
 

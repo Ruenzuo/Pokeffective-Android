@@ -27,6 +27,8 @@ public class Pokemon extends Model implements Cloneable, Serializable {
     @Column(name = "evolution")
     private boolean evolution;
 
+    private boolean selected;
+
     public List<Move> moves() {
         return getMany(Move.class, "Pokemon");
     }
@@ -90,6 +92,14 @@ public class Pokemon extends Model implements Cloneable, Serializable {
 
     public void setEvolution(boolean evolution) {
         this.evolution = evolution;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public static List<Pokemon> getAll() {
