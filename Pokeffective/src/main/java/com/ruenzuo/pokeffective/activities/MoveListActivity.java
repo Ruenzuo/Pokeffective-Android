@@ -89,7 +89,7 @@ public class MoveListActivity extends BaseActivity implements OnMoveSelectedList
         if (filterActive) {
             menu.add(Menu.NONE, R.id.action_move_filter_clear, Menu.NONE, "Clear")
                     .setIcon(getResources().getDrawable(R.drawable.ic_action_trash))
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             clearItem = menu.findItem(R.id.action_move_filter_clear);
         }
         MenuItem searchItem = menu.findItem(R.id.action_move_search);

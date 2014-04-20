@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.ruenzuo.pokeffective.R;
@@ -55,11 +56,17 @@ public class PartyListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Pokemon pokemon = (Pokemon)getListAdapter().getItem(position);
-        pokemon.setSelected(!pokemon.isSelected());
-        listener.onPartyMemberSelected(pokemon);
-        SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
-        PartyAdapter adapter = (PartyAdapter)listAdapter.getDecoratedBaseAdapter();
-        adapter.notifyDataSetChanged();
+        if (listener.shouldAllowSelection(pokemon)) {
+            pokemon.setSelected(!pokemon.isSelected());
+            listener.onPartyMemberSelected(pokemon);
+            SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+            PartyAdapter adapter = (PartyAdapter)listAdapter.getDecoratedBaseAdapter();
+            adapter.notifyDataSetChanged();
+        }
+        else {
+            Toast toast = Toast.makeText(getActivity(), "You can't analyze a party with more than three pókemon.", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
     @Override
