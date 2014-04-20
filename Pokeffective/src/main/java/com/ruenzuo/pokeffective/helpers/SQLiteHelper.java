@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.ruenzuo.pokeffective.models.AnalysisType;
+import com.ruenzuo.pokeffective.models.Effective;
+import com.ruenzuo.pokeffective.models.Effectiveness;
 import com.ruenzuo.pokeffective.models.Move;
 import com.ruenzuo.pokeffective.models.MoveCategory;
 import com.ruenzuo.pokeffective.models.MoveLearnMethod;
@@ -147,6 +150,40 @@ public class SQLiteHelper {
         return pokemons;
     }
 
+    public Hashtable efficacy(AnalysisType analysisType) {
+        Hashtable efficacy = new Hashtable();
+        String efficacyQuery = QueryHelper.efficacyQuery();
+        Cursor efficacyCursor = SQLiteDatabase.rawQuery(efficacyQuery, null);
+        while (efficacyCursor.moveToNext()) {
+            PokemonType damager = PokemonType.values()[efficacyCursor.getInt(efficacyCursor.getColumnIndex("damager"))];
+            PokemonType target = PokemonType.values()[efficacyCursor.getInt(efficacyCursor.getColumnIndex("target"))];
+            Effectiveness effectiveness = Effectiveness.fromIntValue(efficacyCursor.getInt(efficacyCursor.getColumnIndex("factor")));
+            if (analysisType == AnalysisType.ATTACK) {
+                ArrayList<Effectiveness> type = (ArrayList<Effectiveness>) efficacy.get(target);
+                if (type == null) {
+                    type = new ArrayList<Effectiveness>();
+                    for (int i = 0; i < PokemonType.values().length - 1; i++) {
+                        type.add(null);
+                    }
+                }
+                type.set(damager.ordinal() - 1, effectiveness);
+                efficacy.put(target, type);
+            }
+            else {
+                ArrayList<Effectiveness> type = (ArrayList<Effectiveness>) efficacy.get(damager);
+                if (type == null) {
+                    type = new ArrayList<Effectiveness>();
+                    for (int i = 0; i < PokemonType.values().length - 1; i++) {
+                        type.add(null);
+                    }
+                }
+                type.set(target.ordinal() - 1, effectiveness);
+                efficacy.put(damager, type);
+            }
+        }
+        return efficacy;
+    }
+
     private class PokemonComparator implements Comparator<Pokemon> {
 
         @Override
@@ -162,5 +199,6 @@ public class SQLiteHelper {
         public int compare(Move o1, Move o2) {
             return o1.getName().compareTo(o2.getName());
         }
+
     }
 }

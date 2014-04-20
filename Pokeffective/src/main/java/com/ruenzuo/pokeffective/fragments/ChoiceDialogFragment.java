@@ -7,19 +7,21 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import com.ruenzuo.pokeffective.definitions.OnConfirmListener;
+import com.ruenzuo.pokeffective.definitions.OnChoiceSelectedListener;
 
 /**
  * Created by ruenzuo on 18/04/14.
  */
-public class ConfirmDialogFragment extends DialogFragment {
+public class ChoiceDialogFragment extends DialogFragment {
 
-    OnConfirmListener listener;
+    OnChoiceSelectedListener listener;
 
-    public static ConfirmDialogFragment newInstance(String message) {
-        ConfirmDialogFragment fragment = new ConfirmDialogFragment();
+    public static ChoiceDialogFragment newInstance(String title, String message, String[] buttons) {
+        ChoiceDialogFragment fragment = new ChoiceDialogFragment();
         Bundle args = new Bundle();
+        args.putString("Title", title);
         args.putString("Message", message);
+        args.putSerializable("Buttons", buttons);
         fragment.setArguments(args);
         return fragment;
     }
@@ -28,28 +30,30 @@ public class ConfirmDialogFragment extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            listener = (OnConfirmListener) activity;
+            listener = (OnChoiceSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnConfirmListener");
+                    + " must implement OnChoiceSelectedListener");
         }
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         String message = getArguments().getString("Message");
+        String title = getArguments().getString("Title");
+        String[] buttons = (String[]) getArguments().getSerializable("Buttons");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Confirm")
+        builder.setTitle(title)
                 .setMessage(message)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(buttons[0], new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        listener.onConfirm(true);
+                        listener.onChoiceSelected(true);
                     }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                }).setNegativeButton(buttons[1], new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.onConfirm(false);
+                listener.onChoiceSelected(false);
             }
         });
         return builder.create();
