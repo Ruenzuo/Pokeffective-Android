@@ -51,7 +51,7 @@ public class InfoActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            finish();
+            finishAnimated();
             return true;
         }
         return super.onOptionsItemSelected(item);
