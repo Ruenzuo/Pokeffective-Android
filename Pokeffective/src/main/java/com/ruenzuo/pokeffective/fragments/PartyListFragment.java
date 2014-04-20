@@ -14,6 +14,7 @@ import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAni
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.adapters.PartyAdapter;
 import com.ruenzuo.pokeffective.definitions.OnPartyMemberSelectedListener;
+import com.ruenzuo.pokeffective.definitions.OnPartySelectionClearedListener;
 import com.ruenzuo.pokeffective.models.Pokemon;
 import com.ruenzuo.pokeffective.tasks.BoxTask;
 import com.telly.groundy.Groundy;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 /**
  * Created by ruenzuo on 19/04/14.
  */
-public class PartyListFragment extends ListFragment {
+public class PartyListFragment extends ListFragment implements OnPartySelectionClearedListener {
 
     private OnPartyMemberSelectedListener listener;
 
@@ -90,4 +91,15 @@ public class PartyListFragment extends ListFragment {
         adapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onPartySelectionCleared() {
+        SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+        listAdapter.setShouldAnimateFromPosition(0);
+        PartyAdapter adapter = (PartyAdapter)listAdapter.getDecoratedBaseAdapter();
+        for (Pokemon pokemon : adapter) {
+            pokemon.setSelected(false);
+        }
+        adapter.notifyDataSetChanged();
+        getListView().setSelection(0);
+    }
 }

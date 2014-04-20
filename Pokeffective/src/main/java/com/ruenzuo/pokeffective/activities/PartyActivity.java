@@ -1,15 +1,17 @@
 package com.ruenzuo.pokeffective.activities;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.manuelpeinado.refreshactionitem.ProgressIndicatorType;
 import com.manuelpeinado.refreshactionitem.RefreshActionItem;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.base.BaseActivity;
 import com.ruenzuo.pokeffective.definitions.OnPartyMemberSelectedListener;
+import com.ruenzuo.pokeffective.definitions.OnPartySelectionClearedListener;
+import com.ruenzuo.pokeffective.fragments.PartyListFragment;
 import com.ruenzuo.pokeffective.models.Pokemon;
 
 import java.util.Hashtable;
@@ -21,6 +23,7 @@ public class PartyActivity extends BaseActivity implements OnPartyMemberSelected
 
     private Hashtable selected;
     private RefreshActionItem progressItem;
+    private OnPartySelectionClearedListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,32 @@ public class PartyActivity extends BaseActivity implements OnPartyMemberSelected
         setContentView(R.layout.party_activity);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         selected = new Hashtable();
+        PartyListFragment fragment = (PartyListFragment) getFragmentManager().findFragmentById(R.id.partyListFragment);
+        setSelectionClearedListener(fragment);
+    }
+
+    private void clearSelection() {
+        Object[] selectedObjects = selected.values().toArray();
+        int count = selectedObjects.length;
+        for (int i = 0; i < count; i++) {
+            Pokemon pokemon = (Pokemon) selectedObjects[i];
+            pokemon.setSelected(false);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        clearSelection();
+        super.onBackPressed();
+    }
+
+    private void setSelectionClearedListener(Fragment fragment) {
+        try {
+            listener = (OnPartySelectionClearedListener) fragment;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(fragment.toString()
+                    + " must implement OnPartySelectionClearedListener");
+        }
     }
 
     @Override
@@ -68,8 +97,14 @@ public class PartyActivity extends BaseActivity implements OnPartyMemberSelected
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
+            clearSelection();
             finishAnimated();
             return true;
+        }
+        else if (id == R.id.action_party_selection_clear) {
+            selected.clear();
+            listener.onPartySelectionCleared();
+            invalidateOptionsMenu();
         }
         return super.onOptionsItemSelected(item);
     }
