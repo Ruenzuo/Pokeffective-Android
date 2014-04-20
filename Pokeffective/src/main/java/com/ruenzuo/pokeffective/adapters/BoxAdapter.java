@@ -13,6 +13,7 @@ import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.models.Pokemon;
 import com.ruenzuo.pokeffective.models.SelectionType;
+import com.ruenzuo.pokeffective.utils.SDKUtils;
 import com.ruenzuo.pokeffective.utils.ViewUtils;
 
 import java.util.ArrayList;
@@ -45,7 +46,11 @@ public class BoxAdapter extends ArrayAdapter<Pokemon> {
         int resourceId = context.getResources().getIdentifier(resourceName, "drawable", context.getPackageName());
         Drawable drawable = context.getResources().getDrawable(resourceId);
         imgViewPokemonPicture.setImageDrawable(drawable);
-        convertView.setBackground(ViewUtils.getBackground(pokemon.getFirstType(), pokemon.getSecondType(), SelectionType.UNSELECTED));
+        if(SDKUtils.isHigherThanJellyBean()) {
+            convertView.setBackground(ViewUtils.getBackground(pokemon.getFirstType(), pokemon.getSecondType(), SelectionType.UNSELECTED));
+        } else {
+            convertView.setBackgroundDrawable(ViewUtils.getBackground(pokemon.getFirstType(), pokemon.getSecondType(), SelectionType.UNSELECTED));
+        }
         return convertView;
     }
 }

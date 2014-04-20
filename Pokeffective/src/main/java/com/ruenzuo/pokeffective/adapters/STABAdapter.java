@@ -11,6 +11,7 @@ import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.models.STAB;
 import com.ruenzuo.pokeffective.models.SelectionType;
+import com.ruenzuo.pokeffective.utils.SDKUtils;
 import com.ruenzuo.pokeffective.utils.ViewUtils;
 
 import java.util.ArrayList;
@@ -40,7 +41,11 @@ public class STABAdapter extends ArrayAdapter<STAB> {
         txtViewSTABPokemon.setText(anSTAB.getPokemon().getName());
         TextView txtViewSTABMove = (TextView) convertView.findViewById(R.id.txtViewSTABMove);
         txtViewSTABMove.setText(anSTAB.getMove().getName());
-        convertView.setBackground(ViewUtils.getBackground(anSTAB.getMove().getPokemonType(), null, SelectionType.NO_INTERACTION));
+        if(SDKUtils.isHigherThanJellyBean()) {
+            convertView.setBackground(ViewUtils.getBackground(anSTAB.getMove().getPokemonType(), null, SelectionType.NO_INTERACTION));
+        } else {
+            convertView.setBackgroundDrawable(ViewUtils.getBackground(anSTAB.getMove().getPokemonType(), null, SelectionType.NO_INTERACTION));
+        }
         return convertView;
     }
 
