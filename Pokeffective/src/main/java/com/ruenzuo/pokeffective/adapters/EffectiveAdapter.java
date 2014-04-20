@@ -12,6 +12,7 @@ import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.models.Effective;
 import com.ruenzuo.pokeffective.models.SelectionType;
+import com.ruenzuo.pokeffective.utils.SDKUtils;
 import com.ruenzuo.pokeffective.utils.ViewUtils;
 
 import java.util.ArrayList;
@@ -44,11 +45,19 @@ public class EffectiveAdapter extends ArrayAdapter<Effective> {
         ImageView imgViewDisclosure = (ImageView) convertView.findViewById(R.id.imgViewDisclosure);
         if (effective.getSTABs().size() >= 1) {
             imgViewDisclosure.setVisibility(View.VISIBLE);
-            convertView.setBackground(ViewUtils.getBackground(effective.getPokemonType(), null, SelectionType.UNSELECTED));
+            if(SDKUtils.isHigherThanJellyBean()) {
+                convertView.setBackground(ViewUtils.getBackground(effective.getPokemonType(), null, SelectionType.UNSELECTED));
+            } else {
+                convertView.setBackgroundDrawable(ViewUtils.getBackground(effective.getPokemonType(), null, SelectionType.UNSELECTED));
+            }
         }
         else {
             imgViewDisclosure.setVisibility(View.GONE);
-            convertView.setBackground(ViewUtils.getBackground(effective.getPokemonType(), null, SelectionType.NO_INTERACTION));
+            if(SDKUtils.isHigherThanJellyBean()) {
+                convertView.setBackground(ViewUtils.getBackground(effective.getPokemonType(), null, SelectionType.NO_INTERACTION));
+            } else {
+                convertView.setBackgroundDrawable(ViewUtils.getBackground(effective.getPokemonType(), null, SelectionType.NO_INTERACTION));
+            }
         }
         return convertView;
     }
