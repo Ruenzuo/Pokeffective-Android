@@ -1,6 +1,9 @@
 package com.ruenzuo.pokeffective.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
@@ -45,6 +48,16 @@ public class EffectiveListActivity extends BaseListActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finishAnimated();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @OnSuccess(EffectiveTask.class)
     public void onSuccess(@Param("Pokeffective") ArrayList<Effective> pokeffective) {
         SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
@@ -53,6 +66,19 @@ public class EffectiveListActivity extends BaseListActivity {
         adapter.addAll(pokeffective);
         adapter.notifyDataSetChanged();
         getListView().setSelection(0);
+    }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)getListAdapter();
+        EffectiveAdapter adapter = (EffectiveAdapter)listAdapter.getDecoratedBaseAdapter();
+        Effective effective = adapter.get(position);
+        if (effective.getSTABs().size() >= 1) {
+            Intent intent = new Intent(getApplicationContext(), STABListActivity.class);
+            intent.putExtra("STABs", effective.getSTABs());
+            startActivity(intent);
+        }
     }
 
 }

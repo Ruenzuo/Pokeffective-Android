@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.models.Pokemon;
+import com.ruenzuo.pokeffective.models.SelectionType;
 import com.ruenzuo.pokeffective.utils.ViewUtils;
 
 import java.util.ArrayList;
@@ -50,7 +51,12 @@ public class PartyAdapter extends ArrayAdapter<Pokemon> {
         int resourceId = context.getResources().getIdentifier(resourceName, "drawable", context.getPackageName());
         Drawable drawable = context.getResources().getDrawable(resourceId);
         imgViewPokemonPicture.setImageDrawable(drawable);
-        convertView.setBackground(ViewUtils.getBackground(pokemon.getFirstType(), pokemon.getSecondType(), pokemon.isSelected()));
+        if (pokemon.isSelected()) {
+            convertView.setBackground(ViewUtils.getBackground(pokemon.getFirstType(), pokemon.getSecondType(), SelectionType.SELECTED));
+        }
+        else {
+            convertView.setBackground(ViewUtils.getBackground(pokemon.getFirstType(), pokemon.getSecondType(), SelectionType.UNSELECTED));
+        }
         return convertView;
     }
 

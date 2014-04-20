@@ -1,23 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:padding="20dp"
-    android:orientation="vertical"
-    android:layout_centerVertical="true">
-    <TextView
-        android:id="@+id/txtViewEffectiveType"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
+    android:layout_height="100dp">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"/>
-    <TextView
-        android:id="@+id/txtViewEffectiveValue"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"/>
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true">
+        <TextView
+            android:id="@+id/txtViewEffectiveType"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"/>
+        <TextView
+            android:id="@+id/txtViewEffectiveValue"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"/>
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/imgViewDisclosure"
+        android:src="@drawable/ic_navigation_next_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:padding="10dp"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"/>
+</RelativeLayout>

@@ -1,9 +1,11 @@
 package com.ruenzuo.pokeffective.models;
 
+import java.io.Serializable;
+
 /**
  * Created by ruenzuo on 20/04/14.
  */
-public class STAB {
+public class STAB implements Serializable {
 
     private Pokemon pokemon;
     private Move move;

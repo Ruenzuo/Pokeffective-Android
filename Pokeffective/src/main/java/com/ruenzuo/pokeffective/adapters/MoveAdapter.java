@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.nhaarman.listviewanimations.ArrayAdapter;
 import com.ruenzuo.pokeffective.R;
 import com.ruenzuo.pokeffective.models.Move;
+import com.ruenzuo.pokeffective.models.SelectionType;
 import com.ruenzuo.pokeffective.utils.ViewUtils;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class MoveAdapter extends ArrayAdapter<Move> implements Filterable {
         txtViewMovePower.setText("Pwr: " + move.getPower());
         TextView txtViewMoveAccuracy = (TextView) convertView.findViewById(R.id.txtViewMoveAccuracy);
         txtViewMoveAccuracy.setText("Acc: " + move.getAccuracy() + "%");
-        convertView.setBackground(ViewUtils.getBackground(move.getPokemonType(), null, false));
+        convertView.setBackground(ViewUtils.getBackground(move.getPokemonType(), null, SelectionType.UNSELECTED));
         return convertView;
     }
 
