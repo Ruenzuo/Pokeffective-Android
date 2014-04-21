@@ -31,6 +31,9 @@ public class InfoDialogFragment extends DialogFragment {
         TextView txtViewOpenSource = (TextView) view.findViewById(R.id.txtViewOpenSource);
         txtViewOpenSource.setText(Html.fromHtml("PokéApp for Android is built using open source software: <a href='com.ruenzuo.pokeffective://open-source/license'>license</a>"));
         txtViewOpenSource.setMovementMethod(LinkMovementMethod.getInstance());
+        TextView txtViewEevee = (TextView) view.findViewById(R.id.txtViewEevee);
+        txtViewEevee.setText(Html.fromHtml("Special thanks to Eevee for his <a href='https://github.com/veekun/pokedex'>amazing work</a>, you're the best!"));
+        txtViewEevee.setMovementMethod(LinkMovementMethod.getInstance());
         builder.setView(view)
                 .setPositiveButton("OK", null)
                 .setNegativeButton("Legal", new DialogInterface.OnClickListener() {
