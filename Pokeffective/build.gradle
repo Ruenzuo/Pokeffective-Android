@@ -44,4 +44,5 @@ dependencies {
     compile 'com.android.support:support-v4:19.1.0'
     compile 'net.hockeyapp.android:HockeySDK:3.0.1'
     compile project(':External:RefreshActionItem-Native:library')
+    compile project(':External:AndroidBillingLibrary:AndroidBillingLibrary')
 }
