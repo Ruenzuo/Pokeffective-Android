@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,24 +20,42 @@ import com.ruenzuo.pokeffective.fragments.ChoiceDialogFragment;
 import com.ruenzuo.pokeffective.fragments.InfoDialogFragment;
 import com.ruenzuo.pokeffective.models.Pokemon;
 import com.ruenzuo.pokeffective.tasks.BoxTask;
+import com.ruenzuo.pokeffective.utils.PreferencesUtils;
 import com.telly.groundy.Groundy;
 import com.telly.groundy.annotations.OnSuccess;
 import com.telly.groundy.annotations.Param;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
+import net.robotmedia.billing.BillingRequest;
+import net.robotmedia.billing.helper.AbstractBillingActivity;
+import net.robotmedia.billing.model.Transaction;
 
 import java.util.ArrayList;
 
 /**
  * Created by ruenzuo on 17/04/14.
  */
-public class BoxActivity extends Activity implements OnChoiceSelectedListener {
+public class BoxActivity extends AbstractBillingActivity implements OnChoiceSelectedListener {
 
     private GridView gridView;
     private static final int POKEMON_REQUEST_CODE = 1;
     private static final int INVALID_POSITION = -1;
     private int lastHoldPosition;
+
+    @Override
+    public void onBillingChecked(boolean supported) {
+        if (supported) {
+            Log.i("Pokeffective", "Billing is supported");
+        }
+    }
+
+    @Override
+    public void onSubscriptionChecked(boolean supported) {
+        if (supported) {
+            Log.i("Pokeffective", "Suscription is supported");
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +100,29 @@ public class BoxActivity extends Activity implements OnChoiceSelectedListener {
     }
 
     @Override
+    public void onPurchaseStateChanged(String itemId, Transaction.PurchaseState state) {
+        switch (state) {
+            case PURCHASED: {
+                if (!PreferencesUtils.isUnlimitedBoxStorageEnabled(this)) {
+                    PreferencesUtils.enableUnlimitedBoxStorage(true, this);
+                    Toast toast = Toast.makeText(this, "Purchase restored.", Toast.LENGTH_SHORT);
+                    toast.show();
+                    invalidateOptionsMenu();
+                }
+                break;
+            }
+            default: {
+                PreferencesUtils.enableUnlimitedBoxStorage(false, this);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPurchaseResponse(String itemId, BillingRequest.ResponseCode response) {
+        Log.i("Pokeffective", "Item identifier: " + itemId + " State: " + response.toString());
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         checkForCrashes();
@@ -97,6 +139,10 @@ public class BoxActivity extends Activity implements OnChoiceSelectedListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.box_menu, menu);
+        MenuItem restore = menu.findItem(R.id.action_box_restore);
+        if (PreferencesUtils.isUnlimitedBoxStorageEnabled(this)) {
+            restore.setVisible(false);
+        }
         return true;
     }
 
@@ -124,6 +170,10 @@ public class BoxActivity extends Activity implements OnChoiceSelectedListener {
             dialog.show(getFragmentManager(), "InfoDialogFragment");
             return true;
         }
+        else if (id == R.id.action_box_restore) {
+            requestPurchase("com.ruenzuo.pokeffective.storage");
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -149,10 +199,12 @@ public class BoxActivity extends Activity implements OnChoiceSelectedListener {
                 SwingBottomInAnimationAdapter listAdapter = (SwingBottomInAnimationAdapter)gridView.getAdapter();
                 BoxAdapter adapter = (BoxAdapter)listAdapter.getDecoratedBaseAdapter();
                 int count = adapter.getCount();
-                if (count >= 6) {
-                    Toast toast = Toast.makeText(this, "You can't save more than six pokémon in your box. Remove one first in order to add another or buy unlimited space.", Toast.LENGTH_LONG);
-                    toast.show();
-                    return;
+                if (!PreferencesUtils.isUnlimitedBoxStorageEnabled(this)) {
+                    if (count >= 6) {
+                        Toast toast = Toast.makeText(this, "You can't save more than six pokémon in your box. Remove one first in order to add another or buy unlimited space.", Toast.LENGTH_LONG);
+                        toast.show();
+                        return;
+                    }
                 }
                 for(int i = 0; i < count; i++) {
                     Pokemon stored = adapter.get(i);
@@ -210,4 +262,14 @@ public class BoxActivity extends Activity implements OnChoiceSelectedListener {
         }
     }
 
+    @Override
+    public byte[] getObfuscationSalt() {
+        byte[] salt = {-84, 21, -86, 11, -31, 96, -49, -24, 100, -30, -3, -37, 68, 58, -74, -73, -58, 83, -92, -75};
+        return salt;
+    }
+
+    @Override
+    public String getPublicKey() {
+        return "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtTMdyX1e/6wM0wlk73ZXzvb7WEP7BmCcaAUEAgpK7euGr+3L61RZdVVTuHe1oP9r3wykDXLalIIqxLuVJ9y6XM2OLMpEGFiozGw80gGgFXezDXAs84Ie6rxYu3WwzrFYxnaDueKysK6PSox44llLYBtuAgbvcrWaLDttiuZeNnPo4ZY+kfdM5JUGsij9eHbiGFmr6aU/uMC0nNGop3MVueu8qitt1J9U0FuppXjS7l6avuC4ouZRc4axuzLHOPcrSwhkyPmq2l64E4ylijwtlwiY9j3lKOiPi3V9cctF567grPdnsMQlGDWsFZt4OLXUALNnesjR5mKUdzfjGSfNlwIDAQAB";
+    }
 }
