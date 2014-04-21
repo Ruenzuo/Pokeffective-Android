@@ -42,24 +42,32 @@ public class BoxActivity extends AbstractBillingActivity implements OnChoiceSele
     private static final int POKEMON_REQUEST_CODE = 1;
     private static final int INVALID_POSITION = -1;
     private int lastHoldPosition;
+    private boolean billingSupported;
+
+    private void setBillingSupported(boolean billingSupported) {
+        this.billingSupported = billingSupported;
+    }
+
+    private boolean isBillingSupported() {
+        return billingSupported;
+    }
 
     @Override
     public void onBillingChecked(boolean supported) {
-        if (supported) {
-            Log.i("Pokeffective", "Billing is supported");
-        }
+        setBillingSupported(supported);
     }
 
     @Override
     public void onSubscriptionChecked(boolean supported) {
         if (supported) {
-            Log.i("Pokeffective", "Suscription is supported");
+            Log.i("Pokeffective", "Subscription is supported, although is not used at this time.");
         }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setBillingSupported(false);
         lastHoldPosition = INVALID_POSITION;
         setContentView(R.layout.box_activity);
         getActionBar().setTitle("Box");
@@ -119,7 +127,14 @@ public class BoxActivity extends AbstractBillingActivity implements OnChoiceSele
 
     @Override
     public void onRequestPurchaseResponse(String itemId, BillingRequest.ResponseCode response) {
-        Log.i("Pokeffective", "Item identifier: " + itemId + " State: " + response.toString());
+        if (response == BillingRequest.ResponseCode.RESULT_OK) {
+            if (!PreferencesUtils.isUnlimitedBoxStorageEnabled(this)) {
+                PreferencesUtils.enableUnlimitedBoxStorage(true, this);
+                Toast toast = Toast.makeText(this, "Purchase successful.", Toast.LENGTH_SHORT);
+                toast.show();
+                invalidateOptionsMenu();
+            }
+        }
     }
 
     @Override
@@ -171,7 +186,13 @@ public class BoxActivity extends AbstractBillingActivity implements OnChoiceSele
             return true;
         }
         else if (id == R.id.action_box_restore) {
-            requestPurchase("com.ruenzuo.pokeffective.storage");
+            if (isBillingSupported()) {
+                requestPurchase("com.ruenzuo.pokeffective.storage");
+            }
+            else {
+                Toast toast = Toast.makeText(this, "Billing is not supported on this device.", Toast.LENGTH_SHORT);
+                toast.show();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
