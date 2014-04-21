@@ -1,3 +1,6 @@
 [submodule "External/RefreshActionItem-Native"]
 	path = External/RefreshActionItem-Native
 	url = git@github.com:Ruenzuo/RefreshActionItem-Native.git
+[submodule "External/AndroidBillingLibrary"]
+	path = External/AndroidBillingLibrary
+	url = git@github.com:Ruenzuo/AndroidBillingLibrary.git
