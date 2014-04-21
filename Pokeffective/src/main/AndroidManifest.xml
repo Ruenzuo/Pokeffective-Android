@@ -48,6 +48,14 @@
         <activity android:name=".activities.STABListActivity"
             android:label="STABs"
             android:screenOrientation="portrait"/>
+        <service android:name="net.robotmedia.billing.BillingService" />
+        <receiver android:name="net.robotmedia.billing.BillingReceiver">
+            <intent-filter>
+                <action android:name="com.android.vending.billing.IN_APP_NOTIFY" />
+                <action android:name="com.android.vending.billing.RESPONSE_CODE" />
+                <action android:name="com.android.vending.billing.PURCHASE_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
         <activity android:name="net.hockeyapp.android.UpdateActivity" />
         <meta-data android:name="AA_DB_NAME" android:value="Pokeffective.db" />
         <meta-data android:name="AA_DB_VERSION" android:value="1" />
