@@ -104,7 +104,9 @@ public class BoxActivity extends AbstractBillingActivity implements OnChoiceSele
         Groundy.create(BoxTask.class)
                 .callback(this)
                 .queueUsing(this);
-        checkForUpdates();
+        if (!getResources().getBoolean(R.bool.google_play_build)) {
+            checkForUpdates();
+        }
     }
 
     @Override
