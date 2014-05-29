@@ -5,6 +5,8 @@ __Description:__
 
 PokéApp (formerly Pokeffective) is a party balance calculator, what is that? First, you add pokémon to your box and fill their movesets with the current generation information, I can understand that this might be a problem that's why I'll be adding previous generations information soon. Then, you can select up to three pokémon to analize their effectiveness against the 18 type of pokémon in two modes: attacking and defending.
 
+Also available on [iOS](https://github.com/Ruenzuo/Pokeffective-iOS).
+
 ![ios-facade-screenshot-1.png](https://dl.dropboxusercontent.com/u/12352209/GitHub/pokeffective-android-screenshot-1.png)&nbsp;
 ![ios-facade-screenshot-2.png](https://dl.dropboxusercontent.com/u/12352209/GitHub/pokeffective-android-screenshot-2.png)
 ![ios-facade-screenshot-3.png](https://dl.dropboxusercontent.com/u/12352209/GitHub/pokeffective-android-screenshot-3.png)&nbsp;
