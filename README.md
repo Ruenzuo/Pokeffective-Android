@@ -14,4 +14,4 @@ PokéApp (formerly Pokeffective) is a party balance calculator, what is that? Fi
 
 __Please, read:__
 
-Google rejected my app without giving me any reasons, but that's OK, it was a risky project anyway. I'm releasing the source code so anyone interested in check how this app words hopefuly can learn something. Beware, I never intented to do this when I first make the app, so the code it's a little messy. Would appreciate feedback. Also, please read the [license](https://github.com/Ruenzuo/Pokeffective-Android/blob/master/License) and don't be a jackass.
+Google rejected my app without giving me any reasons, but that's OK, it was a risky project anyway. I'm releasing the source code so anyone interested in check how this app words hopefully can learn something. Beware, I never intended to do this when I first make the app, so the code it's a little messy. Would appreciate feedback. Also, please read the [license](https://github.com/Ruenzuo/Pokeffective-Android/blob/master/License) and don't be a jackass.
